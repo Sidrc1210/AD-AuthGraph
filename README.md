@@ -20,12 +20,18 @@ vi)	main.py – This is the execution script. The PowerShell script Collect-ADAu
 
        How to use AD-AuthGraph?
 1.	AD-AuthGraph has to be run from Domain Controller (DC) machine of the current Domain.
+   
 2.	User should have requisite privileges to run scripts on the DC.
+   
 3.	Download by cloning the repository or you can also directly download the scripts.
+   
 4.	Make sure to save all the scripts in a single directory.
+   
 5.	You will need to be on a PowerShell terminal to run AD-AuthGraph.
+   
 6.	 AD-AuthGraph is built to run as a pipeline.
 (i)	Compulsory to run Collect-ADAuthorizationState.ps1 first. Output file ad_authorization_state.json
+
 (ii)	Execute all the Python scripts in order graph_builder.py  analyzer.py  refiner.py  visualizer.py with a single terminal command python main.py ad_authorization_state.json
                                   OR
 (iii)	You can also run the Python scripts individually with output JSON file of the previous script in the pipeline as the parameter, using the following terminal commands:
@@ -36,6 +42,7 @@ python visualizer.py ad_authorization_state_refined.json
           Note: Refer to the PDF Project Report (github path) to see screenshots of the expected terminal responses.
 
 AD-AuthGraph has been conceptualized as a learning project to understand IAM (Identity and Access Management). Authentication and Authorization are both critical components of security strategy. This project is an attempt to understand the second more in-depth. How authorization flows and how even a single change in permission impacts the security posture of the entire network.
+
 What does this repository contain?
 -	Main pipeline - Entire AD-AuthGraph pipeline:
 i)	Collect-ADAuthorizationState.ps1
