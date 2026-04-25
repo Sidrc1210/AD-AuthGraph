@@ -34,9 +34,13 @@ How to use AD-AuthGraph?
                           OR
 	
 		(iii)	You can also run the Python scripts individually with output JSON file of the previous script in the pipeline as the parameter, using the following terminal commands:
-				python graph_builder.py ad_authorization_state.json
-				python analyzer.py ad_authorization_state_graph.json
+
+  	           python graph_builder.py ad_authorization_state.json
+  	 
+               python analyzer.py ad_authorization_state_graph.json
+  	 
 				python refiner.py ad_authorization_state_analyzed.json
+  	 
 				python visualizer.py ad_authorization_state_refined.json
           
 Note: Refer to the PDF Project Report (github path) to see screenshots of the expected terminal responses.
