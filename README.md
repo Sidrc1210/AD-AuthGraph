@@ -27,6 +27,7 @@ How to use AD-AuthGraph?
 4.	Make sure to save all the scripts in a single directory.
 5.	You will need to be on a PowerShell terminal to run AD-AuthGraph.
 6.	 AD-AuthGraph is built to run as a pipeline.
+   
 		(i)	Compulsory to run Collect-ADAuthorizationState.ps1 first. Output file ad_authorization_state.json
 	
 		(ii)	Execute all the Python scripts in order graph_builder.py  analyzer.py  refiner.py  visualizer.py with a single terminal command python main.py ad_authorization_state.json
