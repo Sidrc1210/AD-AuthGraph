@@ -41,6 +41,7 @@ vi)	main.py – This is the execution script. The PowerShell script Collect-ADAu
 AD-AuthGraph has been conceptualized as a learning project to understand IAM (Identity and Access Management). Authentication and Authorization are both critical components of security strategy. This project is an attempt to understand the second more in-depth. How authorization flows and how even a single change in permission impacts the security posture of the entire network.
 
 What does this repository contain?
+
 	Main pipeline - Entire AD-AuthGraph pipeline:
 		i)	Collect-ADAuthorizationState.ps1
 		ii)	graph_builder.py
