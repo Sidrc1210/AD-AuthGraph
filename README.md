@@ -18,7 +18,9 @@ iv)	refiner.py – Consumes data from the output of analyzer.py that is ad_autho
 
 v)	visualizer.py – This is the final script in the pipeline which consumes the data from ad_authorization_state_refined.json (output of refiner.py) to generate an HTML report. The report includes a visual graph explorer, lists the ACL Abuse Chains, Domain Admin Privilege Paths, Kerberoastable Identities.
 
-vi)	main.py – This is the execution script. The PowerShell script Collect-ADAuthorizationState.ps1 has collected and stored data, main.py executes the entire pipeline graph_builder.py  analyzer.py  refiner.py  visualizer.py with a single terminal command: python main.py ad_authorization_state.json
+vi)	main.py – This is the execution script. The PowerShell script Collect-ADAuthorizationState.ps1 has collected and stored data, main.py executes the entire pipeline graph_builder.py -> analyzer.py -> refiner.py -> visualizer.py with a single terminal command: 
+		
+		python main.py ad_authorization_state.json
 
 How to use AD-AuthGraph?
 1.	AD-AuthGraph has to be run from Domain Controller (DC) machine of the current Domain.
