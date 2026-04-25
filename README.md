@@ -31,6 +31,8 @@ How to use AD-AuthGraph?
 6.	 AD-AuthGraph is built to run as a pipeline.
    
 		(i)	Compulsory to run Collect-ADAuthorizationState.ps1 first. Output file ad_authorization_state.json
+
+  	  		     .\Collect-ADAuthorizationState.ps1
 	
 		(ii)	Execute all the Python scripts in order graph_builder.py -> analyzer.py -> refiner.py -> visualizer.py with a single terminal command
 
