@@ -56,7 +56,7 @@ AD-AuthGraph has been conceptualized as a learning project to understand IAM (Id
 
 What does this repository contain?
 
-- Complete-Pipeline - Entire AD-AuthGraph pipeline:
+- Complete-pipeline : The entire AD-AuthGraph pipeline:
 		i)	Collect-ADAuthorizationState.ps1
 		ii)	graph_builder.py
 		iii) analyzer.py
