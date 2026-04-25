@@ -30,8 +30,11 @@ How to use AD-AuthGraph?
    
 		(i)	Compulsory to run Collect-ADAuthorizationState.ps1 first. Output file ad_authorization_state.json
 	
-		(ii)	Execute all the Python scripts in order graph_builder.py  analyzer.py  refiner.py  visualizer.py with a single terminal command python main.py ad_authorization_state.json
-                          OR
+		(ii)	Execute all the Python scripts in order graph_builder.py -> analyzer.py -> refiner.py -> visualizer.py with a single terminal command
+
+  	              python main.py ad_authorization_state.json
+
+  	                    
 	
 		(iii)	You can also run the Python scripts individually with output JSON file of the previous script in the pipeline as the parameter, using the following terminal commands:
 
@@ -39,9 +42,9 @@ How to use AD-AuthGraph?
   	 
                python analyzer.py ad_authorization_state_graph.json
   	 
-				python refiner.py ad_authorization_state_analyzed.json
+			   python refiner.py ad_authorization_state_analyzed.json
   	 
-				python visualizer.py ad_authorization_state_refined.json
+			   python visualizer.py ad_authorization_state_refined.json
           
 Note: Refer to the PDF Project Report (github path) to see screenshots of the expected terminal responses.
 
