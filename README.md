@@ -4,6 +4,7 @@ Active Directory, developed by Microsoft, is the most widely used directory serv
 Within an Active Directory environment, authorization is a critical function after authentication (verifying identity). Authorization determines what kind of access and permissions users have over the resources (files, applications, servers etc.) in a network. This not only impacts hierarchy but also security in an Active Directory domain.
 AD AuthGraph maps authorization in a domain, primarily ACLs (Access Control Lists) and their security implications.
 As mentioned already it is a pipeline of scripts which executes in the given order:
+
 i)	Collect-ADAuthorizationState.ps1 - A PowerShell script collects the raw Active Directory data and stores it in JSON file ad_authorization_state.json.
 
 ii)	graph_builder.py - Uses data stored in the JSON file ad_authorization_state.json to build a directed graph with nodes and edges. Where nodes are users, groups, and computers. Edges are the relationships that develop between the nodes as a result of the application of authorization in the domain. The created graph is stored in the JSON file ad_authorization_state_graph.json.
