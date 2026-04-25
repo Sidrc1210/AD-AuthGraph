@@ -31,11 +31,11 @@ vi)	main.py – This is the execution script. The PowerShell script Collect-ADAu
    
 6.	 AD-AuthGraph is built to run as a pipeline.
 7.	 
-(i)	Compulsory to run Collect-ADAuthorizationState.ps1 first. Output file ad_authorization_state.json
+  (i)	Compulsory to run Collect-ADAuthorizationState.ps1 first. Output file ad_authorization_state.json
 
-(ii)	Execute all the Python scripts in order graph_builder.py  analyzer.py  refiner.py  visualizer.py with a single terminal command python main.py ad_authorization_state.json
+ (ii)	Execute all the Python scripts in order graph_builder.py  analyzer.py  refiner.py  visualizer.py with a single terminal command python main.py ad_authorization_state.json
                                   OR
-(iii)	You can also run the Python scripts individually with output JSON file of the previous script in the pipeline as the parameter, using the following terminal commands:
+ (iii)	You can also run the Python scripts individually with output JSON file of the previous script in the pipeline as the parameter, using the following terminal commands:
         python graph_builder.py ad_authorization_state.json
         python analyzer.py ad_authorization_state_graph.json
         python refiner.py ad_authorization_state_analyzed.json
