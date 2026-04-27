@@ -1,0 +1,874 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8-sig">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AD Authorization Analysis — BLUES.LOCAL</title>
+<style>
+  /* ── Google Fonts ─────────────────────────────────────────────── */
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap');
+
+  /* ── Design Tokens ────────────────────────────────────────────── */
+  :root {
+    --bg:        #0a0c10;
+    --bg2:       #0e1117;
+    --bg3:       #13161e;
+    --border:    #1e2535;
+    --border-hi: #2a3550;
+    --accent:    #00d4ff;
+    --accent2:   #7b5cfa;
+    --warn:      #f0a500;
+    --danger:    #ff4560;
+    --ok:        #00e396;
+    --text:      #c8d6ef;
+    --text-dim:  #5a6a8a;
+    --text-hi:   #e8f0ff;
+    --mono:      'Share Tech Mono', monospace;
+    --head:      'Rajdhani', sans-serif;
+    --body:      'Inter', sans-serif;
+    --r:         6px;
+  }
+
+  /* ── Reset ────────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Scanline overlay ─────────────────────────────────────────── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,.18) 2px,
+      rgba(0,0,0,.18) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── Layout ───────────────────────────────────────────────────── */
+  .wrapper {
+    max-width: 1340px;
+    margin: 0 auto;
+    padding: 0 24px 64px;
+  }
+
+  /* ── Header ───────────────────────────────────────────────────── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 28px 0 22px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .logo-block { display: flex; flex-direction: column; gap: 4px; }
+  .logo-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: var(--head);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-hi);
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+  h1 span { color: var(--accent); }
+  .meta-block {
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.8;
+  }
+  .meta-block .domain { color: var(--accent); font-size: 13px; font-weight: 600; }
+
+  /* ── Section titles ───────────────────────────────────────────── */
+  .section { margin-top: 40px; }
+  .section-title {
+    font-family: var(--head);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-hi);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-left: 3px solid var(--accent);
+    padding-left: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title .badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    background: var(--accent);
+    color: #000;
+    padding: 2px 7px;
+    border-radius: 3px;
+  }
+
+  /* ── Summary cards ────────────────────────────────────────────── */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .card:hover {
+    border-color: var(--border-hi);
+    box-shadow: 0 0 20px rgba(0,212,255,.08);
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .card.ok::after    { background: var(--ok); }
+  .card.warn::after  { background: var(--warn); }
+  .card.danger::after{ background: var(--danger); }
+  .card.neutral::after{ background: var(--accent2); }
+
+  .card-label {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+  .card-value {
+    font-family: var(--head);
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .card.ok .card-value    { color: var(--ok); }
+  .card.warn .card-value  { color: var(--warn); }
+  .card.danger .card-value{ color: var(--danger); }
+  .card.neutral .card-value{ color: var(--accent2); }
+
+  .card-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 6px;
+  }
+
+  /* ── Panel (generic bordered box) ────────────────────────────── */
+  .panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+  .panel-head {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--head);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    color: var(--text-hi);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .panel-body { padding: 18px; }
+
+  /* ── Two-column grid ──────────────────────────────────────────── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media(max-width:860px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ── Path visualization ───────────────────────────────────────── */
+  .path-list { list-style: none; }
+  .path-item {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .path-item:last-child { border-bottom: none; }
+  .path-node {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 3px 9px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .path-node.user     { background: rgba(0,212,255,.12); border: 1px solid rgba(0,212,255,.3); color: var(--accent); }
+  .path-node.group    { background: rgba(123,92,250,.12); border: 1px solid rgba(123,92,250,.3); color: var(--accent2); }
+  .path-node.computer { background: rgba(240,165,0,.12);  border: 1px solid rgba(240,165,0,.3);  color: var(--warn); }
+  .path-node.spn      { background: rgba(0,227,150,.12);  border: 1px solid rgba(0,227,150,.3);  color: var(--ok); }
+  .path-node.other    { background: rgba(200,214,239,.08); border: 1px solid rgba(200,214,239,.2); color: var(--text); }
+  .path-arrow { color: var(--text-dim); font-size: 16px; }
+
+  /* ── Tables ───────────────────────────────────────────────────── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead th {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  tbody tr { transition: background .15s; }
+  tbody tr:hover { background: rgba(255,255,255,.03); }
+  tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ── Risk badges ──────────────────────────────────────────────── */
+  .risk {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .risk-CRITICAL { background: rgba(255,69,96,.2); color: var(--danger); border: 1px solid var(--danger); }
+  .risk-HIGH     { background: rgba(255,69,96,.12); color: #ff7a8a; border: 1px solid #ff4560; }
+  .risk-MEDIUM   { background: rgba(240,165,0,.15); color: var(--warn); border: 1px solid var(--warn); }
+  .risk-LOW      { background: rgba(0,227,150,.1); color: var(--ok); border: 1px solid var(--ok); }
+  .risk-INFO     { background: rgba(0,212,255,.1); color: var(--accent); border: 1px solid var(--accent); }
+
+  /* ── SPN chip list ────────────────────────────────────────────── */
+  .chip-list { display: flex; flex-wrap: wrap; gap: 5px; }
+  .chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 2px 7px;
+    color: var(--text-dim);
+    word-break: break-all;
+  }
+
+  /* ── Delegation box ───────────────────────────────────────────── */
+  .deleg-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--warn);
+    border-radius: var(--r);
+    padding: 14px 18px;
+    margin-bottom: 12px;
+  }
+  .deleg-card:last-child { margin-bottom: 0; }
+  .deleg-title {
+    font-family: var(--head);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-hi);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .deleg-row { display: flex; gap: 8px; margin-top: 6px; font-size: 13px; }
+  .deleg-key {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    min-width: 110px;
+    text-transform: uppercase;
+    padding-top: 2px;
+  }
+  .deleg-val { color: var(--text); }
+  .cond-pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    background: rgba(240,165,0,.12);
+    color: var(--warn);
+    border: 1px solid rgba(240,165,0,.3);
+    border-radius: 3px;
+    padding: 2px 7px;
+    margin-right: 4px;
+    display: inline-block;
+  }
+
+  /* ── ACL chains ───────────────────────────────────────────────── */
+  .acl-group { margin-bottom: 18px; }
+  .acl-target-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  /* ── Graph canvas ─────────────────────────────────────────────── */
+  #graph-canvas {
+    width: 100%;
+    height: 520px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+    position: relative;
+    cursor: grab;
+  }
+  #graph-canvas:active { cursor: grabbing; }
+  #graph-canvas svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ── Tooltip ──────────────────────────────────────────────────── */
+  #tooltip {
+    position: fixed;
+    background: var(--bg2);
+    border: 1px solid var(--border-hi);
+    border-radius: var(--r);
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text);
+    pointer-events: none;
+    z-index: 1000;
+    display: none;
+    max-width: 320px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.5);
+    line-height: 1.7;
+  }
+  #tooltip strong { color: var(--accent); display: block; margin-bottom: 4px; }
+
+  /* ── Legend ───────────────────────────────────────────────────── */
+  .legend {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    font-size: 12px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── Graph controls ───────────────────────────────────────────── */
+  .graph-controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 12px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .btn.active {
+    background: rgba(0,212,255,.1);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ── Empty state ──────────────────────────────────────────────── */
+  .empty {
+    text-align: center;
+    padding: 32px;
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .empty span { display: block; font-size: 28px; margin-bottom: 8px; opacity: .3; }
+
+  /* ── Footer ───────────────────────────────────────────────────── */
+  footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  /* ── Animations ───────────────────────────────────────────────── */
+  @keyframes fadeIn {
+    from { opacity:0; transform: translateY(8px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+  .section { animation: fadeIn .35s ease both; }
+  .section:nth-child(2) { animation-delay: .05s; }
+  .section:nth-child(3) { animation-delay: .10s; }
+  .section:nth-child(4) { animation-delay: .15s; }
+  .section:nth-child(5) { animation-delay: .20s; }
+  .section:nth-child(6) { animation-delay: .25s; }
+  .section:nth-child(7) { animation-delay: .30s; }
+
+  /* ── Icon glyphs (CSS-only) ───────────────────────────────────── */
+  .icon { font-style: normal; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+
+<header>
+  <div class="logo-block">
+    <span class="logo-tag">&#x25A0; Authorization Intelligence Platform</span>
+    <h1>AD Auth<span>Graph</span></h1>
+  </div>
+  <div class="meta-block">
+    <div class="domain">&#x25CF; BLUES.LOCAL</div>
+    <div>Collection Date &nbsp;2026-04-17 18:54:40</div>
+    <div>Report Generated &nbsp;2026-04-17 18:55:38</div>
+  </div>
+</header>
+
+
+<div class="section">
+  <div class="section-title"><i class="icon">▣</i> Executive Summary</div>
+  <div class="cards">
+    
+<div class="card neutral">
+  <div class="card-label">Total Identities</div>
+  <div class="card-value">14</div>
+  <div class="card-sub">users · groups · computers</div>
+</div>
+    
+<div class="card danger">
+  <div class="card-label">DA Path Holders</div>
+  <div class="card-value">3</div>
+  <div class="card-sub">identities with DA access</div>
+</div>
+    
+<div class="card danger">
+  <div class="card-label">Escalation Paths</div>
+  <div class="card-value">3</div>
+  <div class="card-sub">routes to Domain Admin</div>
+</div>
+    
+<div class="card warn">
+  <div class="card-label">Kerberoastable</div>
+  <div class="card-value">3</div>
+  <div class="card-sub">SPN-bearing identities</div>
+</div>
+    
+<div class="card ok">
+  <div class="card-label">ACL Abuse Targets</div>
+  <div class="card-value">0</div>
+  <div class="card-sub">high-risk permission chains</div>
+</div>
+    
+<div class="card warn">
+  <div class="card-label">Delegation Risks</div>
+  <div class="card-value">1</div>
+  <div class="card-sub">unconstrained / constrained</div>
+</div>
+  </div>
+</div>
+
+
+<div class="section">
+  <div class="section-title"><i class="icon">⟶</i> Domain Admin Privilege Paths
+    <span class="badge">3</span>
+  </div>
+  <div class="panel">
+    <table>
+      <thead>
+        <tr>
+          <th>Identity</th><th>Path Count</th><th>Shortest (hops)</th><th>Example Paths</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr>
+  <td><span class="path-node user">User:Administrator</span></td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">2</td>
+  <td>
+    <ul class="path-list"><li class="path-item"><span class="path-node user">User:Administrator</span><span class="path-arrow">→</span><span class="path-node group">Group:Domain Admins</span></li></ul>
+  </td>
+</tr>
+<tr>
+  <td><span class="path-node user">User:vkohli</span></td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">3</td>
+  <td>
+    <ul class="path-list"><li class="path-item"><span class="path-node user">User:vkohli</span><span class="path-arrow">→</span><span class="path-node group">Group:Director</span><span class="path-arrow">→</span><span class="path-node group">Group:Domain Admins</span> <span style="color:#f0a500;font-size:11px;font-family:var(--mono)">[INDIRECT]</span></li></ul>
+  </td>
+</tr>
+<tr>
+  <td><span class="path-node user">User:jbumrah</span></td>
+  <td style="text-align:center">1</td>
+  <td style="text-align:center">3</td>
+  <td>
+    <ul class="path-list"><li class="path-item"><span class="path-node user">User:jbumrah</span><span class="path-arrow">→</span><span class="path-node group">Group:Director</span><span class="path-arrow">→</span><span class="path-node group">Group:Domain Admins</span> <span style="color:#f0a500;font-size:11px;font-family:var(--mono)">[INDIRECT]</span></li></ul>
+  </td>
+</tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title"><i class="icon">⚿</i> Kerberoastable Identities
+    <span class="badge">3</span>
+  </div>
+  <div class="panel">
+    <table>
+      <thead>
+        <tr><th>Identity</th><th>Service Principal Names</th><th>DA Path?</th><th>Risk</th></tr>
+      </thead>
+      <tbody>
+<tr>
+  <td><span class="path-node user">User:krbtgt</span></td>
+  <td><div class="chip-list"><span class="chip">kadmin/changepw</span></div></td>
+  <td><span class="risk risk-LOW">NO</span></td>
+  <td><span class="risk risk-MEDIUM">MEDIUM</span></td>
+</tr>
+<tr>
+  <td><span class="path-node user">User:rsharma</span></td>
+  <td><div class="chip-list"><span class="chip">HTTP/hr-app.blues.local</span></div></td>
+  <td><span class="risk risk-LOW">NO</span></td>
+  <td><span class="risk risk-HIGH">HIGH</span></td>
+</tr>
+<tr>
+  <td><span class="path-node computer">Computer:BLUES-DC$</span></td>
+  <td><div class="chip-list"><span class="chip">Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/Blues-DC.Blues.local</span><span class="chip">ldap/Blues-DC.Blues.local/ForestDnsZones.Blues.local</span><span class="chip">ldap/Blues-DC.Blues.local/DomainDnsZones.Blues.local</span><span class="chip">DNS/Blues-DC.Blues.local</span><span class="chip">GC/Blues-DC.Blues.local/Blues.local</span><span class="chip">RPC/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b._msdcs.Blues.local</span><span class="chip">E3514235-4B06-11D1-AB04-00C04FC2DCD2/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b/Blues.local</span><span class="chip">ldap/BLUES-DC/BLUES</span><span class="chip">ldap/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b._msdcs.Blues.local</span><span class="chip">ldap/Blues-DC.Blues.local/BLUES</span><span class="chip">ldap/BLUES-DC</span><span class="chip">ldap/Blues-DC.Blues.local</span><span class="chip">ldap/Blues-DC.Blues.local/Blues.local</span></div></td>
+  <td><span class="risk risk-LOW">NO</span></td>
+  <td><span class="risk risk-MEDIUM">MEDIUM</span></td>
+</tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title"><i class="icon">⇌</i> Delegation Configuration Risks
+    <span class="badge">1</span>
+  </div>
+  
+<div class="deleg-card">
+  <div class="deleg-title">
+    <span class="path-node computer">Computer:BLUES-DC$</span>
+    <span style="color:var(--text-dim)">→</span>
+    <span class="path-node other">Identity:*</span>
+    <span class="risk risk-MEDIUM" style="margin-left:auto">MEDIUM</span>
+  </div>
+  <div class="deleg-row">
+    <span class="deleg-key">Delegation Type</span>
+    <span class="deleg-val">unconstrained</span>
+  </div>
+  <div class="deleg-row">
+    <span class="deleg-key">Conditions</span>
+    <span class="deleg-val"><span class="cond-pill">target_authenticates</span><span class="cond-pill">forwardable_ticket</span></span>
+  </div>
+</div>
+</div>
+
+<div class="section">
+  <div class="section-title"><i class="icon">⊡</i> ACL Permission Abuse Chains
+    <span class="badge">0</span>
+  </div>
+  <div class="panel"><div class="empty"><span>✓</span>No ACL abuse chains detected</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title"><i class="icon">◈</i> Authorization Graph Explorer
+    <span class="badge">5N / 4E</span>
+  </div>
+  <div style="margin-bottom:10px;font-size:12px"><span style="margin-right:18px"><span style="color:var(--text-dim);font-size:10px;font-family:var(--mono);text-transform:uppercase">nodes</span> <strong style="color:var(--text-hi)">5</strong></span><span style="margin-right:18px"><span style="color:var(--text-dim);font-size:10px;font-family:var(--mono);text-transform:uppercase">edges</span> <strong style="color:var(--text-hi)">4</strong></span></div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#00d4ff"></div> User</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7b5cfa;border-radius:2px"></div> Group</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f0a500"></div> Computer</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#00e396"></div> SPN</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ff4560"></div> Wildcard</div>
+  </div>
+  <div class="graph-controls">
+    <button class="btn" id="btn-reset">↺ Reset View</button>
+    <span style="color:var(--text-dim);font-size:11px;font-family:var(--mono);padding:5px 0">
+      Drag nodes &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Pan on canvas &nbsp;·&nbsp; Hover for details
+    </span>
+  </div>
+  <div id="graph-canvas">
+    <svg id="main-graph" xmlns="http://www.w3.org/2000/svg"
+         width="100%" height="100%" style="transform-origin:0 0"></svg>
+  </div>
+</div>
+
+
+<footer>
+  <span>AD AUTHORIZATION ANALYSIS VISUALIZER</span>
+  <span>Generated: 2026-04-17 18:55:38</span>
+</footer>
+</div>
+<div id="tooltip"></div>
+<script>
+// ── Tooltip helper ───────────────────────────────────────────────
+const tip = document.getElementById('tooltip');
+function showTip(e, html) {
+  tip.innerHTML = html;
+  tip.style.display = 'block';
+  moveTip(e);
+}
+function moveTip(e) {
+  let x = e.clientX + 14, y = e.clientY + 14;
+  if (x + 340 > window.innerWidth)  x = e.clientX - 340;
+  if (y + 200 > window.innerHeight) y = e.clientY - 200;
+  tip.style.left = x + 'px';
+  tip.style.top  = y + 'px';
+}
+function hideTip() { tip.style.display = 'none'; }
+document.addEventListener('mousemove', e => { if (tip.style.display !== 'none') moveTip(e); });
+
+// ── Force-directed graph ─────────────────────────────────────────
+
+(function() {
+  const raw = {"nodes": [{"id": "User:Administrator", "node_type": "user", "sam": "Administrator", "dn": "CN=Administrator,CN=Users,DC=Blues,DC=local", "sid": "S-1-5-21-3360124524-3971235003-997509739-500", "enabled": true, "description": "Built-in account for administering the computer/domain", "has_delegation": false}, {"id": "User:vkohli", "node_type": "user", "sam": "vkohli", "dn": "CN=vkohli,CN=Users,DC=Blues,DC=local", "sid": "S-1-5-21-3360124524-3971235003-997509739-1104", "enabled": true, "description": null, "has_delegation": false}, {"id": "User:jbumrah", "node_type": "user", "sam": "jbumrah", "dn": "CN=jbumrah,CN=Users,DC=Blues,DC=local", "sid": "S-1-5-21-3360124524-3971235003-997509739-1109", "enabled": true, "description": null, "has_delegation": false}, {"id": "Group:Domain Admins", "node_type": "group", "sam": "Domain Admins", "dn": "CN=Domain Admins,CN=Users,DC=Blues,DC=local", "sid": "S-1-5-21-3360124524-3971235003-997509739-512", "description": "Designated administrators of the domain", "group_category": "Security", "group_scope": "Global"}, {"id": "Group:Director", "node_type": "group", "sam": "Director", "dn": "CN=Director,CN=Users,DC=Blues,DC=local", "sid": "S-1-5-21-3360124524-3971235003-997509739-1114", "description": null, "group_category": "Security", "group_scope": "Global"}], "edges": [{"source": "User:Administrator", "target": "Group:Domain Admins", "edge_type": "member_of", "direct_membership": true, "conditional": false, "mediation": "direct"}, {"source": "User:vkohli", "target": "Group:Director", "edge_type": "member_of", "direct_membership": true, "conditional": false, "mediation": "direct"}, {"source": "User:jbumrah", "target": "Group:Director", "edge_type": "member_of", "direct_membership": true, "conditional": false, "mediation": "direct"}, {"source": "Group:Director", "target": "Group:Domain Admins", "edge_type": "member_of", "direct_membership": true, "conditional": false, "mediation": "direct"}]};
+  if (!raw || !raw.nodes || raw.nodes.length === 0) return;
+  const daNodes = ["User:Administrator", "User:vkohli", "User:jbumrah"];
+
+  const svg   = document.getElementById('main-graph');
+  if (!svg) return;
+  const W = svg.clientWidth  || svg.parentElement.clientWidth  || 900;
+  const H = svg.clientHeight || svg.parentElement.clientHeight || 520;
+
+  const nodeColor = {
+    user:     '#00d4ff',
+    group:    '#7b5cfa',
+    computer: '#f0a500',
+    spn:      '#00e396',
+    wildcard: '#ff4560',
+    
+  };
+  const edgeColor = {
+  member_of: '#7b5cfa',   // group membership
+  acl: '#ff4560',         // dangerous
+  delegation: '#f0a500',  // delegation
+  spn: '#00e396',         // SPN relations
+  default: '#1e2535'
+};
+  let nodes = raw.nodes.map(n => ({
+  id:    n.id,
+  type:  n.node_type || 'other',
+  label: n.id.split(':')[1] || n.id,
+  x:     W/2 + (Math.random()-0.5)*W*0.6,
+  y:     H/2 + (Math.random()-0.5)*H*0.6,
+  vx:0, vy:0
+}));
+
+// Place DA nodes in a small circle around the centre so they are
+// never stacked on top of each other (overlapping nodes with dx=dy=0
+// generate zero repulsion force and stay permanently hidden).
+const daNodeObjs = nodes.filter(n => daNodes.includes(n.id));
+const daRadius = Math.min(W, H) * 0.12;
+daNodeObjs.forEach((n, i) => {
+  const angle = (2 * Math.PI * i) / Math.max(daNodeObjs.length, 1);
+  n.x = W / 2 + daRadius * Math.cos(angle);
+  n.y = H / 2 + daRadius * Math.sin(angle);
+});
+
+  const nodeMap = Object.fromEntries(nodes.map(n => [n.id, n]));
+  const links = raw.edges
+    .filter(e => nodeMap[e.source] && nodeMap[e.target])
+    .map(e => ({ s: nodeMap[e.source], t: nodeMap[e.target], type: e.edge_type || '' }));
+
+  // ── Build SVG elements ──
+  const NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs={}) {
+    const e = document.createElementNS(NS, tag);
+    for (const [k,v] of Object.entries(attrs)) e.setAttribute(k,v);
+    return e;
+  }
+
+  // defs: arrowhead markers
+  const defs = el('defs');
+  const mkr  = el('marker', { id:'arr', markerWidth:'8', markerHeight:'6',
+    refX:'16', refY:'3', orient:'auto' });
+  const poly = el('polygon', { points:'0 0, 8 3, 0 6', fill:'#2a3550' });
+  mkr.appendChild(poly); defs.appendChild(mkr); svg.appendChild(defs);
+
+  // Groups
+  const gLinks = el('g'); svg.appendChild(gLinks);
+  const gNodes = el('g'); svg.appendChild(gNodes);
+
+ const lineEls = links.map(lk => {
+  const color = edgeColor[lk.type] || edgeColor.default;
+
+  const line = el('line', {
+    stroke: color,
+    'stroke-width': '2',
+    'marker-end': 'url(#arr)',
+    opacity: '0.85'
+  });
+
+  gLinks.appendChild(line);
+
+  line.addEventListener('mouseenter', e => showTip(e,
+    `<strong>${lk.type || 'edge'}</strong>${lk.s.label} → ${lk.t.label}`
+  ));
+
+  line.addEventListener('mouseleave', hideTip);
+
+  return line;
+});
+
+  const nodeEls = nodes.map(n => {
+    const g = el('g', { cursor:'pointer' });
+    const r = n.type === 'group' ? 9 : n.type === 'computer' ? 8 : 7;
+    const shape = n.type === 'group'
+      ? (() => { const rect = el('rect', { x:-r, y:-r, width:r*2, height:r*2,
+          rx:'3', fill: daNodes.includes(n.id) ? '#ff0000' : (nodeColor[n.type] || '#888'), opacity:'0.9' }); return rect; })()
+      : el('circle', { r, fill: daNodes.includes(n.id) ? '#ff0000' : (nodeColor[n.type] || '#888'), opacity:'0.9' });
+    const label = el('text', { 'text-anchor':'middle', dy:'18',
+      fill:'#5a6a8a', 'font-size':'11', 'font-family':'Share Tech Mono, monospace',
+      'pointer-events':'none' });
+    label.textContent = n.label.length > 18 ? n.label.slice(0,16)+'..' : n.label;
+    g.appendChild(shape); g.appendChild(label);
+    gNodes.appendChild(g);
+
+    g.addEventListener('mouseenter', e => {
+      shape.setAttribute('opacity','1');
+      showTip(e, `<strong>${n.id}</strong>Type: ${n.type}`);
+    });
+    g.addEventListener('mouseleave', e => {
+      shape.setAttribute('opacity','0.9');
+      hideTip();
+    });
+
+    // drag
+    let dragging = false, ox, oy;
+    g.addEventListener('mousedown', e => {
+      dragging=true; ox=e.clientX-n.x; oy=e.clientY-n.y;
+      e.preventDefault();
+    });
+    window.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      n.x=e.clientX-ox; n.y=e.clientY-oy; n.vx=0; n.vy=0;
+    });
+    window.addEventListener('mouseup', ()=>{ dragging=false; });
+
+    return { g, shape, label, n };
+  });
+
+  // ── Force simulation ──
+  function tick() {
+    const alpha = 0.05, repulsion = 800, attraction = 0.04, damping = 0.85;
+    // repulsion
+    for (let i=0; i<nodes.length; i++) for (let j=i+1; j<nodes.length; j++) {
+      const a=nodes[i], b=nodes[j];
+      let dx=b.x-a.x, dy=b.y-a.y;
+      const d=Math.max(Math.sqrt(dx*dx+dy*dy),1);
+      const f=repulsion/(d*d);
+      a.vx-=f*dx; a.vy-=f*dy; b.vx+=f*dx; b.vy+=f*dy;
+    }
+    // attraction (links)
+    for (const lk of links) {
+      const dx=lk.t.x-lk.s.x, dy=lk.t.y-lk.s.y;
+      const d=Math.sqrt(dx*dx+dy*dy)||1;
+      const f=(d-100)*attraction;
+      lk.s.vx+=f*dx/d; lk.s.vy+=f*dy/d;
+      lk.t.vx-=f*dx/d; lk.t.vy-=f*dy/d;
+    }
+    // center gravity
+    for (const n of nodes) {
+      n.vx+=(W/2-n.x)*0.002; n.vy+=(H/2-n.y)*0.002;
+      n.vx*=damping; n.vy*=damping;
+      n.x+=n.vx; n.y+=n.vy;
+      n.x=Math.max(20,Math.min(W-20,n.x));
+      n.y=Math.max(20,Math.min(H-20,n.y));
+    }
+    // update DOM
+    for (let i=0; i<links.length; i++) {
+      lineEls[i].setAttribute('x1',links[i].s.x);
+      lineEls[i].setAttribute('y1',links[i].s.y);
+      lineEls[i].setAttribute('x2',links[i].t.x);
+      lineEls[i].setAttribute('y2',links[i].t.y);
+    }
+    for (const ne of nodeEls) {
+      ne.g.setAttribute('transform',`translate(${ne.n.x},${ne.n.y})`);
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  // ── Pan/zoom ──
+  const canvas = svg.parentElement;
+  let panX=0, panY=0, zoom=1, panning=false, px, py;
+  canvas.addEventListener('mousedown', e=>{ if (e.target===svg||e.target===canvas){panning=true; px=e.clientX; py=e.clientY;} });
+  window.addEventListener('mousemove', e=>{
+    if (!panning) return;
+    panX+=e.clientX-px; panY+=e.clientY-py; px=e.clientX; py=e.clientY;
+    svg.style.transform=`translate(${panX}px,${panY}px) scale(${zoom})`;
+  });
+  window.addEventListener('mouseup', ()=>panning=false);
+  canvas.addEventListener('wheel', e=>{
+    e.preventDefault();
+    zoom=Math.max(.3,Math.min(3, zoom - e.deltaY*0.001));
+    svg.style.transform=`translate(${panX}px,${panY}px) scale(${zoom})`;
+  }, {passive:false});
+
+  // reset button
+  document.getElementById('btn-reset')?.addEventListener('click', ()=>{
+    panX=0; panY=0; zoom=1;
+    svg.style.transform='';
+  });
+})();
+</script>
+</body>
+</html>

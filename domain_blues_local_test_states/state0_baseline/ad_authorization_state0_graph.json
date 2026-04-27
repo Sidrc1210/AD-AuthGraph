@@ -1,0 +1,1099 @@
+﻿{
+  "metadata": {
+    "collector_version": "1.0",
+    "domain": "BLUES.LOCAL",
+    "description": "Active Directory authorization state snapshot",
+    "collection_date": "2026-04-13 17:49:05"
+  },
+  "statistics": {
+    "nodes": 87,
+    "edges": 35,
+    "users": 11,
+    "groups": 58,
+    "computers": 3,
+    "spns": 14
+  },
+  "nodes": [
+    {
+      "id": "User:Administrator",
+      "node_type": "user",
+      "sam": "Administrator",
+      "dn": "CN=Administrator,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-500",
+      "enabled": true,
+      "description": "Built-in account for administering the computer/domain",
+      "has_delegation": false
+    },
+    {
+      "id": "User:Guest",
+      "node_type": "user",
+      "sam": "Guest",
+      "dn": "CN=Guest,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-501",
+      "enabled": false,
+      "description": "Built-in account for guest access to the computer/domain",
+      "has_delegation": false
+    },
+    {
+      "id": "User:krbtgt",
+      "node_type": "user",
+      "sam": "krbtgt",
+      "dn": "CN=krbtgt,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-502",
+      "enabled": false,
+      "description": "Key Distribution Center Service Account",
+      "has_delegation": false
+    },
+    {
+      "id": "User:vkohli",
+      "node_type": "user",
+      "sam": "vkohli",
+      "dn": "CN=vkohli,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1104",
+      "enabled": true,
+      "description": null,
+      "has_delegation": false
+    },
+    {
+      "id": "User:rsharma",
+      "node_type": "user",
+      "sam": "rsharma",
+      "dn": "CN=rsharma,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1107",
+      "enabled": true,
+      "description": null,
+      "has_delegation": false
+    },
+    {
+      "id": "User:jbumrah",
+      "node_type": "user",
+      "sam": "jbumrah",
+      "dn": "CN=jbumrah,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1109",
+      "enabled": true,
+      "description": null,
+      "has_delegation": false
+    },
+    {
+      "id": "User:rashwin",
+      "node_type": "user",
+      "sam": "rashwin",
+      "dn": "CN=rashwin,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1110",
+      "enabled": true,
+      "description": null,
+      "has_delegation": false
+    },
+    {
+      "id": "User:rjadeja",
+      "node_type": "user",
+      "sam": "rjadeja",
+      "dn": "CN=rjadeja,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1111",
+      "enabled": true,
+      "description": null,
+      "has_delegation": false
+    },
+    {
+      "id": "User:rpant",
+      "node_type": "user",
+      "sam": "rpant",
+      "dn": "CN=rpant,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1112",
+      "enabled": true,
+      "description": null,
+      "has_delegation": false
+    },
+    {
+      "id": "User:mdsiraj",
+      "node_type": "user",
+      "sam": "mdsiraj",
+      "dn": "CN=mdsiraj,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1121",
+      "enabled": true,
+      "description": null,
+      "has_delegation": false
+    },
+    {
+      "id": "User:arahane",
+      "node_type": "user",
+      "sam": "arahane",
+      "dn": "CN=arahane,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1122",
+      "enabled": true,
+      "description": null,
+      "has_delegation": false
+    },
+    {
+      "id": "Group:Administrators",
+      "node_type": "group",
+      "sam": "Administrators",
+      "dn": "CN=Administrators,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-544",
+      "description": "Administrators have complete and unrestricted access to the computer/domain",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Users",
+      "node_type": "group",
+      "sam": "Users",
+      "dn": "CN=Users,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-545",
+      "description": "Users are prevented from making accidental or intentional system-wide changes and can run most applications",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Guests",
+      "node_type": "group",
+      "sam": "Guests",
+      "dn": "CN=Guests,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-546",
+      "description": "Guests have the same access as members of the Users group by default, except for the Guest account which is further restricted",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Print Operators",
+      "node_type": "group",
+      "sam": "Print Operators",
+      "dn": "CN=Print Operators,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-550",
+      "description": "Members can administer printers installed on domain controllers",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Backup Operators",
+      "node_type": "group",
+      "sam": "Backup Operators",
+      "dn": "CN=Backup Operators,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-551",
+      "description": "Backup Operators can override security restrictions for the sole purpose of backing up or restoring files",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Replicator",
+      "node_type": "group",
+      "sam": "Replicator",
+      "dn": "CN=Replicator,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-552",
+      "description": "Supports file replication in a domain",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Remote Desktop Users",
+      "node_type": "group",
+      "sam": "Remote Desktop Users",
+      "dn": "CN=Remote Desktop Users,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-555",
+      "description": "Members in this group are granted the right to logon remotely",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Network Configuration Operators",
+      "node_type": "group",
+      "sam": "Network Configuration Operators",
+      "dn": "CN=Network Configuration Operators,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-556",
+      "description": "Members in this group can have some administrative privileges to manage configuration of networking features",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Performance Monitor Users",
+      "node_type": "group",
+      "sam": "Performance Monitor Users",
+      "dn": "CN=Performance Monitor Users,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-558",
+      "description": "Members of this group can access performance counter data locally and remotely",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Performance Log Users",
+      "node_type": "group",
+      "sam": "Performance Log Users",
+      "dn": "CN=Performance Log Users,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-559",
+      "description": "Members of this group may schedule logging of performance counters, enable trace providers, and collect event traces both locally and via remote access to this computer",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Distributed COM Users",
+      "node_type": "group",
+      "sam": "Distributed COM Users",
+      "dn": "CN=Distributed COM Users,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-562",
+      "description": "Members are allowed to launch, activate and use Distributed COM objects on this machine.",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:IIS_IUSRS",
+      "node_type": "group",
+      "sam": "IIS_IUSRS",
+      "dn": "CN=IIS_IUSRS,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-568",
+      "description": "Built-in group used by Internet Information Services.",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Cryptographic Operators",
+      "node_type": "group",
+      "sam": "Cryptographic Operators",
+      "dn": "CN=Cryptographic Operators,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-569",
+      "description": "Members are authorized to perform cryptographic operations.",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Event Log Readers",
+      "node_type": "group",
+      "sam": "Event Log Readers",
+      "dn": "CN=Event Log Readers,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-573",
+      "description": "Members of this group can read event logs from local machine",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Certificate Service DCOM Access",
+      "node_type": "group",
+      "sam": "Certificate Service DCOM Access",
+      "dn": "CN=Certificate Service DCOM Access,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-574",
+      "description": "Members of this group are allowed to connect to Certification Authorities in the enterprise",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:RDS Remote Access Servers",
+      "node_type": "group",
+      "sam": "RDS Remote Access Servers",
+      "dn": "CN=RDS Remote Access Servers,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-575",
+      "description": "Servers in this group enable users of RemoteApp programs and personal virtual desktops access to these resources. In Internet-facing deployments, these servers are typically deployed in an edge network. This group needs to be populated on servers running RD Connection Broker. RD Gateway servers and RD Web Access servers used in the deployment need to be in this group.",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:RDS Endpoint Servers",
+      "node_type": "group",
+      "sam": "RDS Endpoint Servers",
+      "dn": "CN=RDS Endpoint Servers,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-576",
+      "description": "Servers in this group run virtual machines and host sessions where users RemoteApp programs and personal virtual desktops run. This group needs to be populated on servers running RD Connection Broker. RD Session Host servers and RD Virtualization Host servers used in the deployment need to be in this group.",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:RDS Management Servers",
+      "node_type": "group",
+      "sam": "RDS Management Servers",
+      "dn": "CN=RDS Management Servers,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-577",
+      "description": "Servers in this group can perform routine administrative actions on servers running Remote Desktop Services. This group needs to be populated on all servers in a Remote Desktop Services deployment. The servers running the RDS Central Management service must be included in this group.",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Hyper-V Administrators",
+      "node_type": "group",
+      "sam": "Hyper-V Administrators",
+      "dn": "CN=Hyper-V Administrators,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-578",
+      "description": "Members of this group have complete and unrestricted access to all features of Hyper-V.",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Access Control Assistance Operators",
+      "node_type": "group",
+      "sam": "Access Control Assistance Operators",
+      "dn": "CN=Access Control Assistance Operators,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-579",
+      "description": "Members of this group can remotely query authorization attributes and permissions for resources on this computer.",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Remote Management Users",
+      "node_type": "group",
+      "sam": "Remote Management Users",
+      "dn": "CN=Remote Management Users,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-580",
+      "description": "Members of this group can access WMI resources over management protocols (such as WS-Management via the Windows Remote Management service). This applies only to WMI namespaces that grant access to the user.",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Storage Replica Administrators",
+      "node_type": "group",
+      "sam": "Storage Replica Administrators",
+      "dn": "CN=Storage Replica Administrators,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-582",
+      "description": "Members of this group have complete and unrestricted access to all features of Storage Replica.",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:OpenSSH Users",
+      "node_type": "group",
+      "sam": "OpenSSH Users",
+      "dn": "CN=OpenSSH Users,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-585",
+      "description": "Members of this group may connect to this computer using SSH.",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Domain Computers",
+      "node_type": "group",
+      "sam": "Domain Computers",
+      "dn": "CN=Domain Computers,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-515",
+      "description": "All workstations and servers joined to the domain",
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:Domain Controllers",
+      "node_type": "group",
+      "sam": "Domain Controllers",
+      "dn": "CN=Domain Controllers,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-516",
+      "description": "All domain controllers in the domain",
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:Schema Admins",
+      "node_type": "group",
+      "sam": "Schema Admins",
+      "dn": "CN=Schema Admins,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-518",
+      "description": "Designated administrators of the schema",
+      "group_category": "Security",
+      "group_scope": "Universal"
+    },
+    {
+      "id": "Group:Enterprise Admins",
+      "node_type": "group",
+      "sam": "Enterprise Admins",
+      "dn": "CN=Enterprise Admins,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-519",
+      "description": "Designated administrators of the enterprise",
+      "group_category": "Security",
+      "group_scope": "Universal"
+    },
+    {
+      "id": "Group:Cert Publishers",
+      "node_type": "group",
+      "sam": "Cert Publishers",
+      "dn": "CN=Cert Publishers,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-517",
+      "description": "Members of this group are permitted to publish certificates to the directory",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Domain Admins",
+      "node_type": "group",
+      "sam": "Domain Admins",
+      "dn": "CN=Domain Admins,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-512",
+      "description": "Designated administrators of the domain",
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:Domain Users",
+      "node_type": "group",
+      "sam": "Domain Users",
+      "dn": "CN=Domain Users,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-513",
+      "description": "All domain users",
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:Domain Guests",
+      "node_type": "group",
+      "sam": "Domain Guests",
+      "dn": "CN=Domain Guests,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-514",
+      "description": "All domain guests",
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:Group Policy Creator Owners",
+      "node_type": "group",
+      "sam": "Group Policy Creator Owners",
+      "dn": "CN=Group Policy Creator Owners,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-520",
+      "description": "Members in this group can modify group policy for the domain",
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:RAS and IAS Servers",
+      "node_type": "group",
+      "sam": "RAS and IAS Servers",
+      "dn": "CN=RAS and IAS Servers,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-553",
+      "description": "Servers in this group can access remote access properties of users",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Server Operators",
+      "node_type": "group",
+      "sam": "Server Operators",
+      "dn": "CN=Server Operators,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-549",
+      "description": "Members can administer domain servers",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Account Operators",
+      "node_type": "group",
+      "sam": "Account Operators",
+      "dn": "CN=Account Operators,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-548",
+      "description": "Members can administer domain user and group accounts",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Pre-Windows 2000 Compatible Access",
+      "node_type": "group",
+      "sam": "Pre-Windows 2000 Compatible Access",
+      "dn": "CN=Pre-Windows 2000 Compatible Access,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-554",
+      "description": "A backward compatibility group which allows read access on all users and groups in the domain",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Incoming Forest Trust Builders",
+      "node_type": "group",
+      "sam": "Incoming Forest Trust Builders",
+      "dn": "CN=Incoming Forest Trust Builders,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-557",
+      "description": "Members of this group can create incoming, one-way trusts to this forest",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Windows Authorization Access Group",
+      "node_type": "group",
+      "sam": "Windows Authorization Access Group",
+      "dn": "CN=Windows Authorization Access Group,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-560",
+      "description": "Members of this group have access to the computed tokenGroupsGlobalAndUniversal attribute on User objects",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Terminal Server License Servers",
+      "node_type": "group",
+      "sam": "Terminal Server License Servers",
+      "dn": "CN=Terminal Server License Servers,CN=Builtin,DC=Blues,DC=local",
+      "sid": "S-1-5-32-561",
+      "description": "Members of this group can update user accounts in Active Directory with information about license issuance, for the purpose of tracking and reporting TS Per User CAL usage",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Allowed RODC Password Replication Group",
+      "node_type": "group",
+      "sam": "Allowed RODC Password Replication Group",
+      "dn": "CN=Allowed RODC Password Replication Group,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-571",
+      "description": "Members in this group can have their passwords replicated to all read-only domain controllers in the domain",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Denied RODC Password Replication Group",
+      "node_type": "group",
+      "sam": "Denied RODC Password Replication Group",
+      "dn": "CN=Denied RODC Password Replication Group,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-572",
+      "description": "Members in this group cannot have their passwords replicated to any read-only domain controllers in the domain",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:Read-only Domain Controllers",
+      "node_type": "group",
+      "sam": "Read-only Domain Controllers",
+      "dn": "CN=Read-only Domain Controllers,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-521",
+      "description": "Members of this group are Read-Only Domain Controllers in the domain",
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:Enterprise Read-only Domain Controllers",
+      "node_type": "group",
+      "sam": "Enterprise Read-only Domain Controllers",
+      "dn": "CN=Enterprise Read-only Domain Controllers,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-498",
+      "description": "Members of this group are Read-Only Domain Controllers in the enterprise",
+      "group_category": "Security",
+      "group_scope": "Universal"
+    },
+    {
+      "id": "Group:Cloneable Domain Controllers",
+      "node_type": "group",
+      "sam": "Cloneable Domain Controllers",
+      "dn": "CN=Cloneable Domain Controllers,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-522",
+      "description": "Members of this group that are domain controllers may be cloned.",
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:Protected Users",
+      "node_type": "group",
+      "sam": "Protected Users",
+      "dn": "CN=Protected Users,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-525",
+      "description": "Members of this group are afforded additional protections against authentication security threats. See http://go.microsoft.com/fwlink/?LinkId=298939 for more information.",
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:Key Admins",
+      "node_type": "group",
+      "sam": "Key Admins",
+      "dn": "CN=Key Admins,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-526",
+      "description": "Members of this group can perform administrative actions on key objects within the domain.",
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:Enterprise Key Admins",
+      "node_type": "group",
+      "sam": "Enterprise Key Admins",
+      "dn": "CN=Enterprise Key Admins,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-527",
+      "description": "Members of this group can perform administrative actions on key objects within the forest.",
+      "group_category": "Security",
+      "group_scope": "Universal"
+    },
+    {
+      "id": "Group:Forest Trust Accounts",
+      "node_type": "group",
+      "sam": "Forest Trust Accounts",
+      "dn": "CN=Forest Trust Accounts,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-528",
+      "description": "All forest trust accounts in the forest.",
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:External Trust Accounts",
+      "node_type": "group",
+      "sam": "External Trust Accounts",
+      "dn": "CN=External Trust Accounts,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-529",
+      "description": "All external trust accounts in the domain.",
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:DnsAdmins",
+      "node_type": "group",
+      "sam": "DnsAdmins",
+      "dn": "CN=DnsAdmins,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1101",
+      "description": "DNS Administrators Group",
+      "group_category": "Security",
+      "group_scope": "DomainLocal"
+    },
+    {
+      "id": "Group:DnsUpdateProxy",
+      "node_type": "group",
+      "sam": "DnsUpdateProxy",
+      "dn": "CN=DnsUpdateProxy,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1102",
+      "description": "DNS clients who are permitted to perform dynamic updates on behalf of some other clients (such as DHCP servers).",
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:Finance",
+      "node_type": "group",
+      "sam": "Finance",
+      "dn": "CN=Finance,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1113",
+      "description": null,
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:Director",
+      "node_type": "group",
+      "sam": "Director",
+      "dn": "CN=Director,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1114",
+      "description": null,
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:IT",
+      "node_type": "group",
+      "sam": "IT",
+      "dn": "CN=IT,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1115",
+      "description": null,
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:HR",
+      "node_type": "group",
+      "sam": "HR",
+      "dn": "CN=HR,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1116",
+      "description": null,
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:Helpdesk",
+      "node_type": "group",
+      "sam": "Helpdesk",
+      "dn": "CN=Helpdesk,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1117",
+      "description": null,
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:Administration",
+      "node_type": "group",
+      "sam": "Administration",
+      "dn": "CN=Administration,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1118",
+      "description": null,
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Group:Sales",
+      "node_type": "group",
+      "sam": "Sales",
+      "dn": "CN=Sales,CN=Users,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1119",
+      "description": null,
+      "group_category": "Security",
+      "group_scope": "Global"
+    },
+    {
+      "id": "Computer:BLUES-DC$",
+      "node_type": "computer",
+      "sam": "BLUES-DC$",
+      "dn": "CN=BLUES-DC,OU=Domain Controllers,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1000",
+      "enabled": true,
+      "os": "Windows Server 2025 Datacenter Evaluation",
+      "trusted_for_delegation": true
+    },
+    {
+      "id": "Computer:EDENGARDENS$",
+      "node_type": "computer",
+      "sam": "EDENGARDENS$",
+      "dn": "CN=EDENGARDENS,CN=Computers,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1105",
+      "enabled": true,
+      "os": "Windows 11 Pro",
+      "trusted_for_delegation": false
+    },
+    {
+      "id": "Computer:WANKHEDE$",
+      "node_type": "computer",
+      "sam": "WANKHEDE$",
+      "dn": "CN=WANKHEDE,CN=Computers,DC=Blues,DC=local",
+      "sid": "S-1-5-21-3360124524-3971235003-997509739-1108",
+      "enabled": true,
+      "os": "Windows 11 Pro",
+      "trusted_for_delegation": false
+    },
+    {
+      "id": "SPN:kadmin/changepw",
+      "node_type": "spn",
+      "spn": "kadmin/changepw"
+    },
+    {
+      "id": "SPN:Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/Blues-DC.Blues.local",
+      "node_type": "spn",
+      "spn": "Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/Blues-DC.Blues.local"
+    },
+    {
+      "id": "SPN:ldap/Blues-DC.Blues.local/ForestDnsZones.Blues.local",
+      "node_type": "spn",
+      "spn": "ldap/Blues-DC.Blues.local/ForestDnsZones.Blues.local"
+    },
+    {
+      "id": "SPN:ldap/Blues-DC.Blues.local/DomainDnsZones.Blues.local",
+      "node_type": "spn",
+      "spn": "ldap/Blues-DC.Blues.local/DomainDnsZones.Blues.local"
+    },
+    {
+      "id": "SPN:DNS/Blues-DC.Blues.local",
+      "node_type": "spn",
+      "spn": "DNS/Blues-DC.Blues.local"
+    },
+    {
+      "id": "SPN:GC/Blues-DC.Blues.local/Blues.local",
+      "node_type": "spn",
+      "spn": "GC/Blues-DC.Blues.local/Blues.local"
+    },
+    {
+      "id": "SPN:RPC/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b._msdcs.Blues.local",
+      "node_type": "spn",
+      "spn": "RPC/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b._msdcs.Blues.local"
+    },
+    {
+      "id": "SPN:E3514235-4B06-11D1-AB04-00C04FC2DCD2/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b/Blues.local",
+      "node_type": "spn",
+      "spn": "E3514235-4B06-11D1-AB04-00C04FC2DCD2/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b/Blues.local"
+    },
+    {
+      "id": "SPN:ldap/BLUES-DC/BLUES",
+      "node_type": "spn",
+      "spn": "ldap/BLUES-DC/BLUES"
+    },
+    {
+      "id": "SPN:ldap/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b._msdcs.Blues.local",
+      "node_type": "spn",
+      "spn": "ldap/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b._msdcs.Blues.local"
+    },
+    {
+      "id": "SPN:ldap/Blues-DC.Blues.local/BLUES",
+      "node_type": "spn",
+      "spn": "ldap/Blues-DC.Blues.local/BLUES"
+    },
+    {
+      "id": "SPN:ldap/BLUES-DC",
+      "node_type": "spn",
+      "spn": "ldap/BLUES-DC"
+    },
+    {
+      "id": "SPN:ldap/Blues-DC.Blues.local",
+      "node_type": "spn",
+      "spn": "ldap/Blues-DC.Blues.local"
+    },
+    {
+      "id": "SPN:ldap/Blues-DC.Blues.local/Blues.local",
+      "node_type": "spn",
+      "spn": "ldap/Blues-DC.Blues.local/Blues.local"
+    },
+    {
+      "id": "Identity:*",
+      "node_type": "wildcard",
+      "description": "Any identity"
+    }
+  ],
+  "edges": [
+    {
+      "source": "User:Administrator",
+      "target": "Group:Administrators",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "User:Administrator",
+      "target": "Group:Users",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "User:Administrator",
+      "target": "Group:Schema Admins",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "User:Administrator",
+      "target": "Group:Enterprise Admins",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "User:Administrator",
+      "target": "Group:Domain Admins",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "User:Administrator",
+      "target": "Group:Group Policy Creator Owners",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "User:Administrator",
+      "target": "Group:Denied RODC Password Replication Group",
+      "edge_type": "member_of",
+      "direct_membership": false,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "User:Guest",
+      "target": "Group:Guests",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "User:krbtgt",
+      "target": "Group:Denied RODC Password Replication Group",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "User:krbtgt",
+      "target": "SPN:kadmin/changepw",
+      "edge_type": "has_spn",
+      "conditional": false,
+      "mediation": "direct",
+      "enabled": false
+    },
+    {
+      "source": "Group:Domain Controllers",
+      "target": "Group:Denied RODC Password Replication Group",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "Group:Schema Admins",
+      "target": "Group:Denied RODC Password Replication Group",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "Group:Enterprise Admins",
+      "target": "Group:Administrators",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "Group:Enterprise Admins",
+      "target": "Group:Denied RODC Password Replication Group",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "Group:Cert Publishers",
+      "target": "Group:Denied RODC Password Replication Group",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "Group:Domain Admins",
+      "target": "Group:Administrators",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "Group:Domain Admins",
+      "target": "Group:Denied RODC Password Replication Group",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "Group:Domain Users",
+      "target": "Group:Users",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "Group:Domain Guests",
+      "target": "Group:Guests",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "Group:Group Policy Creator Owners",
+      "target": "Group:Denied RODC Password Replication Group",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "Group:Read-only Domain Controllers",
+      "target": "Group:Denied RODC Password Replication Group",
+      "edge_type": "member_of",
+      "direct_membership": true,
+      "conditional": false,
+      "mediation": "direct"
+    },
+    {
+      "source": "Computer:BLUES-DC$",
+      "target": "SPN:Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/Blues-DC.Blues.local",
+      "edge_type": "has_spn",
+      "conditional": false,
+      "mediation": "direct",
+      "enabled": true
+    },
+    {
+      "source": "Computer:BLUES-DC$",
+      "target": "SPN:ldap/Blues-DC.Blues.local/ForestDnsZones.Blues.local",
+      "edge_type": "has_spn",
+      "conditional": false,
+      "mediation": "direct",
+      "enabled": true
+    },
+    {
+      "source": "Computer:BLUES-DC$",
+      "target": "SPN:ldap/Blues-DC.Blues.local/DomainDnsZones.Blues.local",
+      "edge_type": "has_spn",
+      "conditional": false,
+      "mediation": "direct",
+      "enabled": true
+    },
+    {
+      "source": "Computer:BLUES-DC$",
+      "target": "SPN:DNS/Blues-DC.Blues.local",
+      "edge_type": "has_spn",
+      "conditional": false,
+      "mediation": "direct",
+      "enabled": true
+    },
+    {
+      "source": "Computer:BLUES-DC$",
+      "target": "SPN:GC/Blues-DC.Blues.local/Blues.local",
+      "edge_type": "has_spn",
+      "conditional": false,
+      "mediation": "direct",
+      "enabled": true
+    },
+    {
+      "source": "Computer:BLUES-DC$",
+      "target": "SPN:RPC/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b._msdcs.Blues.local",
+      "edge_type": "has_spn",
+      "conditional": false,
+      "mediation": "direct",
+      "enabled": true
+    },
+    {
+      "source": "Computer:BLUES-DC$",
+      "target": "SPN:E3514235-4B06-11D1-AB04-00C04FC2DCD2/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b/Blues.local",
+      "edge_type": "has_spn",
+      "conditional": false,
+      "mediation": "direct",
+      "enabled": true
+    },
+    {
+      "source": "Computer:BLUES-DC$",
+      "target": "SPN:ldap/BLUES-DC/BLUES",
+      "edge_type": "has_spn",
+      "conditional": false,
+      "mediation": "direct",
+      "enabled": true
+    },
+    {
+      "source": "Computer:BLUES-DC$",
+      "target": "SPN:ldap/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b._msdcs.Blues.local",
+      "edge_type": "has_spn",
+      "conditional": false,
+      "mediation": "direct",
+      "enabled": true
+    },
+    {
+      "source": "Computer:BLUES-DC$",
+      "target": "SPN:ldap/Blues-DC.Blues.local/BLUES",
+      "edge_type": "has_spn",
+      "conditional": false,
+      "mediation": "direct",
+      "enabled": true
+    },
+    {
+      "source": "Computer:BLUES-DC$",
+      "target": "SPN:ldap/BLUES-DC",
+      "edge_type": "has_spn",
+      "conditional": false,
+      "mediation": "direct",
+      "enabled": true
+    },
+    {
+      "source": "Computer:BLUES-DC$",
+      "target": "SPN:ldap/Blues-DC.Blues.local",
+      "edge_type": "has_spn",
+      "conditional": false,
+      "mediation": "direct",
+      "enabled": true
+    },
+    {
+      "source": "Computer:BLUES-DC$",
+      "target": "SPN:ldap/Blues-DC.Blues.local/Blues.local",
+      "edge_type": "has_spn",
+      "conditional": false,
+      "mediation": "direct",
+      "enabled": true
+    },
+    {
+      "source": "Computer:BLUES-DC$",
+      "target": "Identity:*",
+      "edge_type": "trusted_for_delegation",
+      "delegation_type": "unconstrained",
+      "conditional": true,
+      "conditions": [
+        "target_authenticates",
+        "forwardable_ticket"
+      ],
+      "mediation": "kdc"
+    }
+  ]
+}

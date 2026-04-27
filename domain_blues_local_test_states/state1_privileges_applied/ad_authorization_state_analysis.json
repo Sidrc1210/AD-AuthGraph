@@ -1,0 +1,178 @@
+﻿{
+  "metadata": {
+    "collector_version": "1.0",
+    "domain": "BLUES.LOCAL",
+    "description": "Active Directory authorization state snapshot",
+    "collection_date": "2026-04-17 18:54:40"
+  },
+  "summary": {
+    "total_identities": 14,
+    "identities_with_da_paths": 3,
+    "total_da_paths": 3,
+    "kerberoastable_identities": 3,
+    "acl_abuse_targets": 0,
+    "delegation_risks": 1
+  },
+  "domain_admin_paths": {
+    "User:Administrator": {
+      "path_count": 1,
+      "shortest_path_length": 2,
+      "paths": [
+        [
+          "User:Administrator",
+          "Group:Domain Admins"
+        ]
+      ]
+    },
+    "User:vkohli": {
+      "path_count": 1,
+      "shortest_path_length": 3,
+      "paths": [
+        [
+          "User:vkohli",
+          "Group:Director",
+          "Group:Domain Admins"
+        ]
+      ]
+    },
+    "User:jbumrah": {
+      "path_count": 1,
+      "shortest_path_length": 3,
+      "paths": [
+        [
+          "User:jbumrah",
+          "Group:Director",
+          "Group:Domain Admins"
+        ]
+      ]
+    }
+  },
+  "kerberoastable_analysis": {
+    "User:krbtgt": {
+      "spns": [
+        "kadmin/changepw"
+      ],
+      "spn_count": 1,
+      "paths_to_da": 0,
+      "shortest_path_length": null,
+      "authorities": [
+        "Group:Denied RODC Password Replication Group"
+      ],
+      "risk_level": "MEDIUM",
+      "enabled": false
+    },
+    "User:rsharma": {
+      "spns": [
+        "HTTP/hr-app.blues.local"
+      ],
+      "spn_count": 1,
+      "paths_to_da": 0,
+      "shortest_path_length": null,
+      "authorities": [
+        "Group:Administration",
+        "Group:HR"
+      ],
+      "risk_level": "HIGH",
+      "enabled": true
+    },
+    "Computer:BLUES-DC$": {
+      "spns": [
+        "Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/Blues-DC.Blues.local",
+        "ldap/Blues-DC.Blues.local/ForestDnsZones.Blues.local",
+        "ldap/Blues-DC.Blues.local/DomainDnsZones.Blues.local",
+        "DNS/Blues-DC.Blues.local",
+        "GC/Blues-DC.Blues.local/Blues.local",
+        "RPC/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b._msdcs.Blues.local",
+        "E3514235-4B06-11D1-AB04-00C04FC2DCD2/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b/Blues.local",
+        "ldap/BLUES-DC/BLUES",
+        "ldap/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b._msdcs.Blues.local",
+        "ldap/Blues-DC.Blues.local/BLUES",
+        "ldap/BLUES-DC",
+        "ldap/Blues-DC.Blues.local",
+        "ldap/Blues-DC.Blues.local/Blues.local"
+      ],
+      "spn_count": 13,
+      "paths_to_da": 0,
+      "shortest_path_length": null,
+      "authorities": [],
+      "risk_level": "MEDIUM",
+      "enabled": true
+    }
+  },
+  "acl_abuse_chains": {},
+  "delegation_risks": [
+    {
+      "source": "Computer:BLUES-DC$",
+      "target": "Identity:*",
+      "delegation_type": "unconstrained",
+      "edge_type": "trusted_for_delegation",
+      "conditional": true,
+      "conditions": [
+        "target_authenticates",
+        "forwardable_ticket"
+      ],
+      "has_high_privilege": false,
+      "risk_level": "MEDIUM"
+    }
+  ],
+  "privilege_distribution": {
+    "Group:Administrators": 3,
+    "Group:Users": 1,
+    "Group:Guests": 1,
+    "Group:Print Operators": 0,
+    "Group:Backup Operators": 0,
+    "Group:Replicator": 0,
+    "Group:Remote Desktop Users": 0,
+    "Group:Network Configuration Operators": 0,
+    "Group:Performance Monitor Users": 0,
+    "Group:Performance Log Users": 0,
+    "Group:Distributed COM Users": 0,
+    "Group:IIS_IUSRS": 0,
+    "Group:Cryptographic Operators": 0,
+    "Group:Event Log Readers": 0,
+    "Group:Certificate Service DCOM Access": 0,
+    "Group:RDS Remote Access Servers": 0,
+    "Group:RDS Endpoint Servers": 0,
+    "Group:RDS Management Servers": 0,
+    "Group:Hyper-V Administrators": 0,
+    "Group:Access Control Assistance Operators": 0,
+    "Group:Remote Management Users": 0,
+    "Group:Storage Replica Administrators": 0,
+    "Group:OpenSSH Users": 0,
+    "Group:Domain Computers": 0,
+    "Group:Domain Controllers": 0,
+    "Group:Schema Admins": 1,
+    "Group:Enterprise Admins": 1,
+    "Group:Cert Publishers": 0,
+    "Group:Domain Admins": 3,
+    "Group:Domain Users": 0,
+    "Group:Domain Guests": 0,
+    "Group:Group Policy Creator Owners": 1,
+    "Group:RAS and IAS Servers": 0,
+    "Group:Server Operators": 0,
+    "Group:Account Operators": 0,
+    "Group:Pre-Windows 2000 Compatible Access": 0,
+    "Group:Incoming Forest Trust Builders": 0,
+    "Group:Windows Authorization Access Group": 0,
+    "Group:Terminal Server License Servers": 0,
+    "Group:Allowed RODC Password Replication Group": 0,
+    "Group:Denied RODC Password Replication Group": 4,
+    "Group:Read-only Domain Controllers": 0,
+    "Group:Enterprise Read-only Domain Controllers": 0,
+    "Group:Cloneable Domain Controllers": 0,
+    "Group:Protected Users": 0,
+    "Group:Key Admins": 0,
+    "Group:Enterprise Key Admins": 0,
+    "Group:Forest Trust Accounts": 0,
+    "Group:External Trust Accounts": 0,
+    "Group:DnsAdmins": 0,
+    "Group:DnsUpdateProxy": 0,
+    "Group:Finance": 3,
+    "Group:Director": 2,
+    "Group:IT": 3,
+    "Group:HR": 1,
+    "Group:Helpdesk": 1,
+    "Group:Administration": 3,
+    "Group:Sales": 3
+  }
+}

@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AD AuthGraph Refined — BLUES.LOCAL</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Cormorant:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+  --ink:        #0e0e0e;
+  --ink2:       #2a2a2a;
+  --ink3:       #5a5a5a;
+  --ink4:       #909090;
+  --rule:       #d8d8d8;
+  --rule2:      #efefef;
+  --paper:      #f7f6f3;
+  --paper2:     #ffffff;
+  --red:        #c0392b;
+  --red2:       #e74c3c;
+  --red-bg:     rgba(192,57,43,.06);
+  --amber:      #b45309;
+  --amber-bg:   rgba(180,83,9,.06);
+  --slate:      #334155;
+  --slate-bg:   rgba(51,65,85,.05);
+  --mono:       'DM Mono', monospace;
+  --serif:      'Cormorant', Georgia, serif;
+  --r:          3px;
+  --page:       1320px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+/* ── Page wrapper ────────────────────────────────────── */
+.page { max-width: var(--page); margin: 0 auto; padding: 0 32px 80px; }
+
+/* ── Header ──────────────────────────────────────────── */
+header {
+  border-bottom: 2px solid var(--ink);
+  padding: 36px 0 28px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.hdr-left { display: flex; flex-direction: column; gap: 6px; }
+.hdr-eyebrow {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+h1 {
+  font-family: var(--serif);
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -.5px;
+}
+h1 em { font-style: italic; color: var(--red); font-weight: 400; }
+.hdr-right {
+  text-align: right;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink3);
+  line-height: 2;
+}
+.hdr-domain {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  font-family: var(--mono);
+  letter-spacing: 1px;
+}
+
+/* ── Section ─────────────────────────────────────────── */
+.section { margin-top: 48px; }
+.section-hdr {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 8px;
+  margin-bottom: 22px;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -.2px;
+}
+.section-count {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ── KPI tiles ───────────────────────────────────────── */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 1px;
+  border: 1px solid var(--rule);
+  background: var(--rule);
+}
+.kpi {
+  background: var(--paper2);
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.kpi-label {
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--ink4);
+}
+.kpi-value {
+  font-family: var(--serif);
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+}
+.kpi.kpi-alert  .kpi-value { color: var(--red); }
+.kpi.kpi-warn   .kpi-value { color: var(--amber); }
+.kpi-sub { font-size: 10px; color: var(--ink4); }
+
+/* ── Risk badges ─────────────────────────────────────── */
+.risk-critical { color: var(--red);   font-weight: 500; }
+.risk-high     { color: var(--amber); font-weight: 500; }
+.risk-medium   { color: var(--slate); }
+.risk-low      { color: var(--ink4);  }
+
+.badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: var(--r);
+}
+.badge-critical { background: var(--red-bg);   color: var(--red);   border: 1px solid rgba(192,57,43,.25); }
+.badge-high     { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(180,83,9,.25);  }
+.badge-medium   { background: var(--slate-bg); color: var(--slate); border: 1px solid rgba(51,65,85,.2);   }
+.badge-low      { background: var(--rule2);    color: var(--ink3);  border: 1px solid var(--rule);         }
+
+/* ── Node chips ──────────────────────────────────────── */
+.chip {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: var(--r);
+  white-space: nowrap;
+}
+.chip-user     { background: rgba(14,14,14,.05);  border: 1px solid rgba(14,14,14,.15); }
+.chip-group    { background: rgba(192,57,43,.07); border: 1px solid rgba(192,57,43,.2); color: var(--red); }
+.chip-computer { background: rgba(180,83,9,.07);  border: 1px solid rgba(180,83,9,.2);  color: var(--amber); }
+.chip-spn      { background: rgba(51,65,85,.07);  border: 1px solid rgba(51,65,85,.2);  color: var(--slate); }
+.chip-other    { background: var(--rule2); border: 1px solid var(--rule); color: var(--ink3); }
+.arr { color: var(--ink4); font-size: 12px; margin: 0 2px; }
+
+/* ── Tables ──────────────────────────────────────────── */
+.tbl-wrap { overflow-x: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+thead th {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink3);
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  white-space: nowrap;
+  background: var(--paper2);
+}
+tbody tr { border-bottom: 1px solid var(--rule2); }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(0,0,0,.018); }
+tbody td {
+  padding: 10px 14px;
+  vertical-align: top;
+  color: var(--ink2);
+}
+
+/* ── ACL finding cards ───────────────────────────────── */
+.acl-cards { display: flex; flex-direction: column; gap: 1px; }
+.acl-card {
+  background: var(--paper2);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--rule);
+  padding: 16px 20px;
+}
+.acl-card.priority-critical { border-left-color: var(--red); background: var(--red-bg); }
+.acl-card.priority-high     { border-left-color: var(--amber); }
+.acl-card.priority-medium   { border-left-color: var(--slate); }
+
+.acl-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.acl-chain-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+.acl-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.acl-perm {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink3);
+  background: var(--rule2);
+  border: 1px solid var(--rule);
+  padding: 2px 8px;
+  border-radius: var(--r);
+}
+.acl-detail {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  border-top: 1px solid var(--rule2);
+  padding-top: 8px;
+}
+.acl-detail-item { font-size: 11px; color: var(--ink3); }
+.acl-detail-item strong { color: var(--ink); font-weight: 500; }
+.acl-ou-path {
+  font-size: 10px;
+  color: var(--ink4);
+  font-style: italic;
+  margin-top: 4px;
+}
+
+/* ── Score bar ───────────────────────────────────────── */
+.score-wrap { display: flex; align-items: center; gap: 8px; }
+.score-bar {
+  height: 4px;
+  border-radius: 2px;
+  min-width: 4px;
+  flex-shrink: 0;
+}
+.bar-critical { background: var(--red); }
+.bar-high     { background: var(--amber); }
+.bar-med      { background: var(--slate); }
+.score-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink3);
+  white-space: nowrap;
+}
+
+/* ── Heatmap ─────────────────────────────────────────── */
+.heatmap-row { display: flex; flex-direction: column; gap: 1px; }
+.heatmap-entry {
+  background: var(--paper2);
+  border: 1px solid var(--rule);
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: 1fr auto auto auto auto auto;
+  gap: 16px;
+  align-items: center;
+}
+.heatmap-entry.he-critical { border-left: 3px solid var(--red); }
+.heatmap-entry.he-high     { border-left: 3px solid var(--amber); }
+.hm-label { font-size: 12px; color: var(--ink2); }
+.hm-label small { display: block; font-size: 10px; color: var(--ink4); }
+.hm-stat { text-align: center; }
+.hm-stat .n { font-family: var(--serif); font-size: 20px; font-weight: 700; }
+.hm-stat .n.n-crit { color: var(--red); }
+.hm-stat .n.n-high { color: var(--amber); }
+.hm-stat small { display: block; font-size: 9px; color: var(--ink4); letter-spacing: 1px; text-transform: uppercase; }
+.prox-pill {
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: var(--r);
+  white-space: nowrap;
+}
+.prox-0  { background: var(--red-bg);   color: var(--red);   border: 1px solid rgba(192,57,43,.2); }
+.prox-1  { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(180,83,9,.2);  }
+.prox-2  { background: var(--slate-bg); color: var(--slate); border: 1px solid rgba(51,65,85,.2);  }
+.prox-hi { background: var(--rule2);    color: var(--ink4);  border: 1px solid var(--rule);        }
+
+/* ── Kerb / delegation cards ─────────────────────────── */
+.info-card {
+  background: var(--paper2);
+  border: 1px solid var(--rule);
+  padding: 14px 18px;
+  margin-bottom: 1px;
+}
+.info-card-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.info-card-body {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule2);
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--ink3);
+}
+.info-card-body strong { color: var(--ink); font-weight: 500; }
+.spn-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.spn {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 1px 6px;
+  background: var(--rule2);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  color: var(--ink3);
+  word-break: break-all;
+}
+
+/* ── Graph explorer ──────────────────────────────────── */
+#graph-wrap {
+  border: 1px solid var(--rule);
+  background: var(--paper2);
+  position: relative;
+  overflow: hidden;
+  height: 560px;
+  cursor: grab;
+}
+#graph-wrap:active { cursor: grabbing; }
+#graph-svg { width: 100%; height: 100%; display: block; }
+
+.graph-legend {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--ink3);
+  margin-bottom: 10px;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-dot  { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.legend-sq   { width: 9px; height: 9px; border-radius: 1px; flex-shrink: 0; }
+
+.graph-controls { display: flex; gap: 8px; margin-bottom: 10px; }
+.gbtn {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 5px 12px;
+  border: 1px solid var(--rule);
+  background: var(--paper2);
+  color: var(--ink3);
+  cursor: pointer;
+  border-radius: var(--r);
+  letter-spacing: .5px;
+}
+.gbtn:hover { border-color: var(--ink); color: var(--ink); }
+
+/* ── Tooltip ─────────────────────────────────────────── */
+#tip {
+  position: fixed;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 8px 12px;
+  border-radius: var(--r);
+  pointer-events: none;
+  z-index: 9999;
+  display: none;
+  max-width: 340px;
+  line-height: 1.6;
+  box-shadow: 0 4px 20px rgba(0,0,0,.25);
+}
+#tip strong { color: #f0c040; display: block; }
+
+/* ── Footer ──────────────────────────────────────────── */
+footer {
+  margin-top: 64px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 9px;
+  color: var(--ink4);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* ── Animations ──────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.section {
+  animation: fadeUp .4s ease both;
+}
+.section:nth-child(2)  { animation-delay: .04s; }
+.section:nth-child(3)  { animation-delay: .08s; }
+.section:nth-child(4)  { animation-delay: .12s; }
+.section:nth-child(5)  { animation-delay: .16s; }
+.section:nth-child(6)  { animation-delay: .20s; }
+.section:nth-child(7)  { animation-delay: .24s; }
+.section:nth-child(8)  { animation-delay: .28s; }
+
+.score-num {display: none !important;}
+.badge-low {display: none !important;}
+</style>
+</head>
+<body>
+<div id="tip"></div>
+<div class="page">
+
+<header>
+  <div class="hdr-left">
+    <span class="hdr-eyebrow">Authorization Intelligence &#x2022; Refined Analysis</span>
+    <h1>AD Auth<em>Graph</em></h1>
+  </div>
+  <div class="hdr-right">
+    <div class="hdr-domain">&#x25cf; BLUES.LOCAL</div>
+    <div>Collection &nbsp; 2026-04-24 15:31:55</div>
+    <div>Refined &nbsp;&nbsp;&nbsp; 2026-04-24 10:04:00</div>
+    <div>Report &nbsp;&nbsp;&nbsp;&nbsp; 2026-04-24 15:34:00</div>
+  </div>
+</header>
+
+<div class="section">
+  <div class="section-hdr">
+    <span class="section-title">Executive Summary</span>
+  </div>
+  <div class="kpi-row"><div class="kpi">
+  <div class="kpi-label">ACL Abuse Chains</div>
+  <div class="kpi-value">40</div>
+  <div class="kpi-sub"></div>
+</div><div class="kpi kpi-alert">
+  <div class="kpi-label">DA Path Holders</div>
+  <div class="kpi-value">5</div>
+  <div class="kpi-sub">identities → Domain Admins</div>
+</div><div class="kpi kpi-warn">
+  <div class="kpi-label">Kerberoastable</div>
+  <div class="kpi-value">3</div>
+  <div class="kpi-sub"></div>
+</div><div class="kpi kpi-warn">
+  <div class="kpi-label">Delegation Risks</div>
+  <div class="kpi-value">1</div>
+  <div class="kpi-sub">configured delegations</div>
+</div><div class="kpi">
+  <div class="kpi-label">Registry Size</div>
+  <div class="kpi-value">88</div>
+  <div class="kpi-sub">AD objects tracked</div>
+</div></div>
+  
+</div>
+
+<div class="section">
+  <div class="section-hdr">
+    <span class="section-title">ACL Abuse Chains</span>
+    <span class="section-count">40 findings &nbsp;·&nbsp; 0 high-priority</span>
+  </div>
+  <div class="acl-cards">
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Administrators</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">CreateChild, DeleteChild, Self, WriteProperty, ExtendedRight, Delete, GenericRead, WriteDacl, WriteOwner</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 2 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Administrators</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Administrators can use has_WriteDACL_on on Group:Domain Admins to gain access to Domain Admins via: Group:Administrators -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Enterprise Admins</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">CreateChild, DeleteChild, Self, WriteProperty, ExtendedRight, GenericRead, WriteDacl, WriteOwner</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 2 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Enterprise Admins</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Enterprise Admins can use has_WriteDACL_on on Group:Domain Admins to gain access to Domain Admins via: Group:Enterprise Admins -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Administrators</span> <span class="arr">→</span> <span class="chip chip-user">vkohli</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">CreateChild, DeleteChild, Self, WriteProperty, ExtendedRight, Delete, GenericRead, WriteDacl, WriteOwner</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Administrators</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Administrators can use has_WriteDACL_on on User:vkohli to gain access to Domain Admins via: Group:Administrators -&gt; User:vkohli -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Enterprise Admins</span> <span class="arr">→</span> <span class="chip chip-user">vkohli</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">CreateChild, DeleteChild, Self, WriteProperty, ExtendedRight, GenericRead, WriteDacl, WriteOwner</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Enterprise Admins</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Enterprise Admins can use has_WriteDACL_on on User:vkohli to gain access to Domain Admins via: Group:Enterprise Admins -&gt; User:vkohli -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Administrators</span> <span class="arr">→</span> <span class="chip chip-user">Administrator</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">CreateChild, DeleteChild, Self, WriteProperty, ExtendedRight, Delete, GenericRead, WriteDacl, WriteOwner</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Administrators</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Administrators can use has_WriteDACL_on on User:Administrator to gain access to Domain Admins via: Group:Administrators -&gt; User:Administrator -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Enterprise Admins</span> <span class="arr">→</span> <span class="chip chip-user">Administrator</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">CreateChild, DeleteChild, Self, WriteProperty, ExtendedRight, GenericRead, WriteDacl, WriteOwner</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Enterprise Admins</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Enterprise Admins can use has_WriteDACL_on on User:Administrator to gain access to Domain Admins via: Group:Enterprise Admins -&gt; User:Administrator -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Administrators</span> <span class="arr">→</span> <span class="chip chip-user">jbumrah</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">CreateChild, DeleteChild, Self, WriteProperty, ExtendedRight, Delete, GenericRead, WriteDacl, WriteOwner</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Administrators</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Administrators can use has_WriteDACL_on on User:jbumrah to gain access to Domain Admins via: Group:Administrators -&gt; User:jbumrah -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Enterprise Admins</span> <span class="arr">→</span> <span class="chip chip-user">jbumrah</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">CreateChild, DeleteChild, Self, WriteProperty, ExtendedRight, GenericRead, WriteDacl, WriteOwner</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Enterprise Admins</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Enterprise Admins can use has_WriteDACL_on on User:jbumrah to gain access to Domain Admins via: Group:Enterprise Admins -&gt; User:jbumrah -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Administrators</span> <span class="arr">→</span> <span class="chip chip-group">Enterprise Admins</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">CreateChild, DeleteChild, Self, WriteProperty, ExtendedRight, Delete, GenericRead, WriteDacl, WriteOwner</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Administrators</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Administrators can use has_WriteDACL_on on Group:Enterprise Admins to gain access to Domain Admins via: Group:Administrators -&gt; Group:Enterprise Admins -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Administrators</span> <span class="arr">→</span> <span class="chip chip-group">Director</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">CreateChild, DeleteChild, Self, WriteProperty, ExtendedRight, Delete, GenericRead, WriteDacl, WriteOwner</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Administrators</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Administrators can use has_WriteDACL_on on Group:Director to gain access to Domain Admins via: Group:Administrators -&gt; Group:Director -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Enterprise Admins</span> <span class="arr">→</span> <span class="chip chip-group">Director</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">CreateChild, DeleteChild, Self, WriteProperty, ExtendedRight, GenericRead, WriteDacl, WriteOwner</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Enterprise Admins</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Enterprise Admins can use has_WriteDACL_on on Group:Director to gain access to Domain Admins via: Group:Enterprise Admins -&gt; Group:Director -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Enterprise Admins</span> <span class="arr">→</span> <span class="chip chip-group">Administrators</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">CreateChild, DeleteChild, Self, WriteProperty, ExtendedRight, GenericRead, WriteDacl, WriteOwner</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Enterprise Admins</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Enterprise Admins can use has_WriteDACL_on on Group:Administrators to gain access to Domain Admins via: Group:Enterprise Admins -&gt; Group:Administrators -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Account Operators</span> <span class="arr">→</span> <span class="chip chip-group">Cert Publishers</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">GenericAll</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Account Operators</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Account Operators can use has_GenericAll_on on Group:Cert Publishers to gain access to Domain Admins via: Group:Account Operators -&gt; Group:Cert Publishers -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Account Operators</span> <span class="arr">→</span> <span class="chip chip-group">Terminal Server License Servers</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">GenericAll</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Account Operators</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Account Operators can use has_GenericAll_on on Group:Terminal Server License Servers to gain access to Domain Admins via: Group:Account Operators -&gt; Group:Terminal Server License Servers -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Account Operators</span> <span class="arr">→</span> <span class="chip chip-user">mdsiraj</span> <span class="arr">→</span> <span class="chip chip-user">vkohli</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">GenericAll</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 4 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 2</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Account Operators</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Account Operators can use has_GenericAll_on on User:mdsiraj to gain access to Domain Admins via: Group:Account Operators -&gt; User:mdsiraj -&gt; User:vkohli -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Administrators</span> <span class="arr">→</span> <span class="chip chip-group">Account Operators</span> <span class="arr">→</span> <span class="chip chip-group">Cert Publishers</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">CreateChild, DeleteChild, Self, WriteProperty, ExtendedRight, Delete, GenericRead, WriteDacl, WriteOwner</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 4 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Administrators</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Administrators can use has_WriteDACL_on on Group:Account Operators to gain access to Domain Admins via: Group:Administrators -&gt; Group:Account Operators -&gt; Group:Cert Publishers -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Enterprise Admins</span> <span class="arr">→</span> <span class="chip chip-group">Account Operators</span> <span class="arr">→</span> <span class="chip chip-group">Cert Publishers</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">CreateChild, DeleteChild, Self, WriteProperty, ExtendedRight, GenericRead, WriteDacl, WriteOwner</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 4 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Enterprise Admins</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Enterprise Admins can use has_WriteDACL_on on Group:Account Operators to gain access to Domain Admins via: Group:Enterprise Admins -&gt; Group:Account Operators -&gt; Group:Cert Publishers -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Account Operators</span> <span class="arr">→</span> <span class="chip chip-user">rsharma</span> <span class="arr">→</span> <span class="chip chip-user">mdsiraj</span> <span class="arr">→</span> <span class="chip chip-user">vkohli</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">GenericAll</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 5 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 3</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Account Operators</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Account Operators can use has_GenericAll_on on User:rsharma to gain access to Domain Admins via: Group:Account Operators -&gt; User:rsharma -&gt; User:mdsiraj -&gt; User:vkohli -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Cert Publishers</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 2 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Cert Publishers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Cert Publishers can use has_WriteProperty_on on Group:Domain Admins to gain access to Domain Admins via: Group:Cert Publishers -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Terminal Server License Servers</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 2 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Terminal Server License Servers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Terminal Server License Servers can use has_WriteProperty_on on Group:Domain Admins to gain access to Domain Admins via: Group:Terminal Server License Servers -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Cert Publishers</span> <span class="arr">→</span> <span class="chip chip-user">vkohli</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Cert Publishers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Cert Publishers can use has_WriteProperty_on on User:vkohli to gain access to Domain Admins via: Group:Cert Publishers -&gt; User:vkohli -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Terminal Server License Servers</span> <span class="arr">→</span> <span class="chip chip-user">vkohli</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Terminal Server License Servers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Terminal Server License Servers can use has_WriteProperty_on on User:vkohli to gain access to Domain Admins via: Group:Terminal Server License Servers -&gt; User:vkohli -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Cert Publishers</span> <span class="arr">→</span> <span class="chip chip-user">Administrator</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Cert Publishers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Cert Publishers can use has_WriteProperty_on on User:Administrator to gain access to Domain Admins via: Group:Cert Publishers -&gt; User:Administrator -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Terminal Server License Servers</span> <span class="arr">→</span> <span class="chip chip-user">Administrator</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Terminal Server License Servers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Terminal Server License Servers can use has_WriteProperty_on on User:Administrator to gain access to Domain Admins via: Group:Terminal Server License Servers -&gt; User:Administrator -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Cert Publishers</span> <span class="arr">→</span> <span class="chip chip-user">jbumrah</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Cert Publishers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Cert Publishers can use has_WriteProperty_on on User:jbumrah to gain access to Domain Admins via: Group:Cert Publishers -&gt; User:jbumrah -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Terminal Server License Servers</span> <span class="arr">→</span> <span class="chip chip-user">jbumrah</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Terminal Server License Servers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Terminal Server License Servers can use has_WriteProperty_on on User:jbumrah to gain access to Domain Admins via: Group:Terminal Server License Servers -&gt; User:jbumrah -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Cert Publishers</span> <span class="arr">→</span> <span class="chip chip-group">Enterprise Admins</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Cert Publishers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Cert Publishers can use has_WriteProperty_on on Group:Enterprise Admins to gain access to Domain Admins via: Group:Cert Publishers -&gt; Group:Enterprise Admins -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Terminal Server License Servers</span> <span class="arr">→</span> <span class="chip chip-group">Enterprise Admins</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Terminal Server License Servers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Terminal Server License Servers can use has_WriteProperty_on on Group:Enterprise Admins to gain access to Domain Admins via: Group:Terminal Server License Servers -&gt; Group:Enterprise Admins -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Cert Publishers</span> <span class="arr">→</span> <span class="chip chip-group">Director</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Cert Publishers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Cert Publishers can use has_WriteProperty_on on Group:Director to gain access to Domain Admins via: Group:Cert Publishers -&gt; Group:Director -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Terminal Server License Servers</span> <span class="arr">→</span> <span class="chip chip-group">Director</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Terminal Server License Servers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Terminal Server License Servers can use has_WriteProperty_on on Group:Director to gain access to Domain Admins via: Group:Terminal Server License Servers -&gt; Group:Director -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Cert Publishers</span> <span class="arr">→</span> <span class="chip chip-group">Administrators</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Cert Publishers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Cert Publishers can use has_WriteProperty_on on Group:Administrators to gain access to Domain Admins via: Group:Cert Publishers -&gt; Group:Administrators -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Terminal Server License Servers</span> <span class="arr">→</span> <span class="chip chip-group">Administrators</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Terminal Server License Servers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Terminal Server License Servers can use has_WriteProperty_on on Group:Administrators to gain access to Domain Admins via: Group:Terminal Server License Servers -&gt; Group:Administrators -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Cert Publishers</span> <span class="arr">→</span> <span class="chip chip-user">mdsiraj</span> <span class="arr">→</span> <span class="chip chip-user">vkohli</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 4 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 2</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Cert Publishers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Cert Publishers can use has_WriteProperty_on on User:mdsiraj to gain access to Domain Admins via: Group:Cert Publishers -&gt; User:mdsiraj -&gt; User:vkohli -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Terminal Server License Servers</span> <span class="arr">→</span> <span class="chip chip-user">mdsiraj</span> <span class="arr">→</span> <span class="chip chip-user">vkohli</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 4 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 2</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Terminal Server License Servers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Terminal Server License Servers can use has_WriteProperty_on on User:mdsiraj to gain access to Domain Admins via: Group:Terminal Server License Servers -&gt; User:mdsiraj -&gt; User:vkohli -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Cert Publishers</span> <span class="arr">→</span> <span class="chip chip-group">Account Operators</span> <span class="arr">→</span> <span class="chip chip-group">Cert Publishers</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 4 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Cert Publishers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Cert Publishers can use has_WriteProperty_on on Group:Account Operators to gain access to Domain Admins via: Group:Cert Publishers -&gt; Group:Account Operators -&gt; Group:Cert Publishers -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Terminal Server License Servers</span> <span class="arr">→</span> <span class="chip chip-group">Account Operators</span> <span class="arr">→</span> <span class="chip chip-group">Cert Publishers</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 4 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 0</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Terminal Server License Servers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Terminal Server License Servers can use has_WriteProperty_on on Group:Account Operators to gain access to Domain Admins via: Group:Terminal Server License Servers -&gt; Group:Account Operators -&gt; Group:Cert Publishers -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Cert Publishers</span> <span class="arr">→</span> <span class="chip chip-user">rsharma</span> <span class="arr">→</span> <span class="chip chip-user">mdsiraj</span> <span class="arr">→</span> <span class="chip chip-user">vkohli</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 5 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 3</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Cert Publishers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Cert Publishers can use has_WriteProperty_on on User:rsharma to gain access to Domain Admins via: Group:Cert Publishers -&gt; User:rsharma -&gt; User:mdsiraj -&gt; User:vkohli -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-group">Terminal Server License Servers</span> <span class="arr">→</span> <span class="chip chip-user">rsharma</span> <span class="arr">→</span> <span class="chip chip-user">mdsiraj</span> <span class="arr">→</span> <span class="chip chip-user">vkohli</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ReadProperty, WriteProperty</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 5 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 1</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 3</div>
+    <div class="acl-detail-item"><strong>Authorities Gained:</strong> <span class="chip chip-group">Terminal Server License Servers</span></div>
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">Group:Terminal Server License Servers can use has_WriteProperty_on on User:rsharma to gain access to Domain Admins via: Group:Terminal Server License Servers -&gt; User:rsharma -&gt; User:mdsiraj -&gt; User:vkohli -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-user">mdsiraj</span> <span class="arr">→</span> <span class="chip chip-user">vkohli</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">ExtendedRight</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 3 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 2</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 1</div>
+    
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">User:mdsiraj can use ResetPassword on User:vkohli to gain access to Domain Admins via: User:mdsiraj -&gt; User:vkohli -&gt; Group:Domain Admins</div>
+</div>
+<div class="acl-card">
+  <div class="acl-top">
+    <div class="acl-chain-row">
+      <span class="chip chip-user">rsharma</span> <span class="arr">→</span> <span class="chip chip-user">mdsiraj</span> <span class="arr">→</span> <span class="chip chip-user">vkohli</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span>
+    </div>
+    <div class="acl-meta">
+      <div class="score-wrap"><div class="score-bar bar-med" style="width:0%"></div><span class="score-num">0.0</span></div>
+      <span class="badge badge-low">LOW</span>
+    </div>
+  </div>
+  <div class="acl-ou-path">BLUES.LOCAL // (Domain Root) -&gt; BLUES.LOCAL // (Domain Root)</div>
+  <div class="acl-detail">
+    <div class="acl-detail-item"><strong>Permission:</strong> <span class="acl-perm">WriteDacl</span></div>
+    <div class="acl-detail-item"><strong>Chain:</strong> 4 hops</div>
+    <div class="acl-detail-item"><strong>Source Proximity:</strong> prox: 3</div>
+    <div class="acl-detail-item"><strong>Target Proximity:</strong> prox: 2</div>
+    
+  </div>
+  <div class="acl-detail-item" style="margin-top:6px;font-size:11px;color:var(--ink3)">User:rsharma can use has_WriteDACL_on on User:mdsiraj to gain access to Domain Admins via: User:rsharma -&gt; User:mdsiraj -&gt; User:vkohli -&gt; Group:Domain Admins</div>
+</div></div>
+</div>
+
+
+<div class="section">
+  <div class="section-hdr">
+    <span class="section-title">Domain Admin Privilege Paths</span>
+    <span class="section-count">5 identities</span>
+  </div>
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Identity</th><th>Shortest Path</th><th>Paths</th>
+        <th>Hops</th><th>Prox</th><th>OU</th><th>BFS</th>
+      </tr>
+    </thead>
+    <tbody><tr>
+  <td><span class="chip chip-user">Administrator</span></td>
+  <td><span class="chip chip-user">Administrator</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span></td>
+  <td style="text-align:center">280</td>
+  <td style="text-align:center">2</td>
+  <td style="text-align:center">1</td>
+  <td style="color:var(--ink4);font-size:10px">BLUES.LOCAL // (Domain Root)</td>
+  <td style="text-align:center;color:var(--ink4)">✓</td>
+</tr><tr>
+  <td><span class="chip chip-user">vkohli</span></td>
+  <td><span class="chip chip-user">vkohli</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span></td>
+  <td style="text-align:center">96</td>
+  <td style="text-align:center">2</td>
+  <td style="text-align:center">1</td>
+  <td style="color:var(--ink4);font-size:10px">BLUES.LOCAL // (Domain Root)</td>
+  <td style="text-align:center;color:var(--ink4)">✓</td>
+</tr><tr>
+  <td><span class="chip chip-user">jbumrah</span></td>
+  <td><span class="chip chip-user">jbumrah</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span></td>
+  <td style="text-align:center">150</td>
+  <td style="text-align:center">2</td>
+  <td style="text-align:center">1</td>
+  <td style="color:var(--ink4);font-size:10px">BLUES.LOCAL // (Domain Root)</td>
+  <td style="text-align:center;color:var(--ink4)">✓</td>
+</tr><tr>
+  <td><span class="chip chip-user">mdsiraj</span></td>
+  <td><span class="chip chip-user">mdsiraj</span> <span class="arr">→</span> <span class="chip chip-user">vkohli</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span></td>
+  <td style="text-align:center">96</td>
+  <td style="text-align:center">3</td>
+  <td style="text-align:center">2</td>
+  <td style="color:var(--ink4);font-size:10px">BLUES.LOCAL // (Domain Root)</td>
+  <td style="text-align:center;color:var(--ink4)">✓</td>
+</tr><tr>
+  <td><span class="chip chip-user">rsharma</span></td>
+  <td><span class="chip chip-user">rsharma</span> <span class="arr">→</span> <span class="chip chip-user">mdsiraj</span> <span class="arr">→</span> <span class="chip chip-user">vkohli</span> <span class="arr">→</span> <span class="chip chip-group">Domain Admins</span></td>
+  <td style="text-align:center">96</td>
+  <td style="text-align:center">4</td>
+  <td style="text-align:center">3</td>
+  <td style="color:var(--ink4);font-size:10px">BLUES.LOCAL // (Domain Root)</td>
+  <td style="text-align:center;color:var(--ink4)">✓</td>
+</tr></tbody>
+  </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-hdr">
+    <span class="section-title">Kerberoastable Identities</span>
+    <span class="section-count">3 identities &nbsp;·&nbsp; 0 high-priority</span>
+  </div>
+  
+<div class="info-card" style="">
+  <div class="info-card-top">
+    <span class="chip chip-user">rsharma</span>
+    <span class="badge badge-medium">MEDIUM</span>
+    <span class="badge badge-critical">DA PATH</span>
+    <span style="font-size:10px;color:var(--ink4)">ENABLED</span>
+    <span style="font-size:10px;color:var(--ink4);margin-left:auto">prox: 3</span>
+  </div>
+  <div class="spn-list"><span class="spn">HTTP/hr-app.blues.local</span></div>
+  <div class="info-card-body" style="margin-top:6px">
+    <span><strong>OU:</strong> BLUES.LOCAL // (Domain Root)</span>
+    <span><strong>SPN Count:</strong> 1</span>
+    <span><strong>DA Paths:</strong> 96</span>
+  </div>
+</div>
+<div class="info-card" style="">
+  <div class="info-card-top">
+    <span class="chip chip-user">krbtgt</span>
+    <span class="badge badge-medium">MEDIUM</span>
+    <span class="badge badge-low">NO DA PATH</span>
+    <span style="font-size:10px;color:var(--ink4)"><span style="color:var(--ink4)">DISABLED</span></span>
+    <span style="font-size:10px;color:var(--ink4);margin-left:auto">prox: —</span>
+  </div>
+  <div class="spn-list"><span class="spn">kadmin/changepw</span></div>
+  <div class="info-card-body" style="margin-top:6px">
+    <span><strong>OU:</strong> BLUES.LOCAL // (Domain Root)</span>
+    <span><strong>SPN Count:</strong> 1</span>
+    <span><strong>DA Paths:</strong> 0</span>
+  </div>
+</div>
+<div class="info-card" style="">
+  <div class="info-card-top">
+    <span class="chip chip-computer">BLUES-DC$</span>
+    <span class="badge badge-medium">MEDIUM</span>
+    <span class="badge badge-low">NO DA PATH</span>
+    <span style="font-size:10px;color:var(--ink4)">ENABLED</span>
+    <span style="font-size:10px;color:var(--ink4);margin-left:auto">prox: —</span>
+  </div>
+  <div class="spn-list"><span class="spn">Dfsr-12F9A27C-BF97-4787-9364-D31B6C55EB04/Blues-DC.Blues.local</span><span class="spn">ldap/Blues-DC.Blues.local/ForestDnsZones.Blues.local</span><span class="spn">ldap/Blues-DC.Blues.local/DomainDnsZones.Blues.local</span><span class="spn">DNS/Blues-DC.Blues.local</span><span class="spn">GC/Blues-DC.Blues.local/Blues.local</span><span class="spn">RPC/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b._msdcs.Blues.local</span><span class="spn">E3514235-4B06-11D1-AB04-00C04FC2DCD2/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b/Blues.local</span><span class="spn">ldap/BLUES-DC/BLUES</span><span class="spn">ldap/2e7cb30a-bcf3-4cf2-9285-5dcf28936f2b._msdcs.Blues.local</span><span class="spn">ldap/Blues-DC.Blues.local/BLUES</span><span class="spn">ldap/BLUES-DC</span><span class="spn">ldap/Blues-DC.Blues.local</span><span class="spn">ldap/Blues-DC.Blues.local/Blues.local</span></div>
+  <div class="info-card-body" style="margin-top:6px">
+    <span><strong>OU:</strong> BLUES.LOCAL // Domain Controllers</span>
+    <span><strong>SPN Count:</strong> 13</span>
+    <span><strong>DA Paths:</strong> 0</span>
+  </div>
+</div>
+</div>
+
+<div class="section">
+  <div class="section-hdr">
+    <span class="section-title">Delegation Risks</span>
+    <span class="section-count">1</span>
+  </div>
+  
+<div class="info-card" style="">
+  <div class="info-card-top">
+    <span class="chip chip-computer">BLUES-DC$</span>
+    <span class="arr">→</span>
+    <span class="chip chip-other">*</span>
+    <span class="badge badge-medium">MEDIUM</span>
+    <span style="font-family:var(--mono);font-size:10px;background:var(--rule2);border:1px solid var(--rule);padding:2px 8px;border-radius:var(--r)">unconstrained</span>
+  </div>
+  <div class="info-card-body">
+    <span><strong>Conditions:</strong> target_authenticates, forwardable_ticket</span>
+    <span><strong>OU Direction:</strong> BLUES.LOCAL // Domain Controllers -&gt; BLUES.LOCAL // (Domain Root)</span>
+    <span><strong>Source Prox:</strong> None</span>
+  </div>
+</div>
+</div>
+
+<div class="section">
+  <div class="section-hdr">
+    <span class="section-title">Graph Explorer</span>
+    <span class="section-count">9 nodes &nbsp;·&nbsp; 6 edges</span>
+  </div>
+  <div class="graph-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#0e0e0e"></div> User</div>
+    <div class="legend-item"><div class="legend-sq" style="background:#c0392b"></div> Group</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#b45309"></div> Computer</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#334155"></div> SPN</div>
+    <div class="legend-item"><div style="width:18px;height:2px;background:#c0392b;margin-top:4px"></div>&nbsp;Critical ACL</div>
+    <div class="legend-item"><div style="width:18px;height:2px;background:#d8d8d8;margin-top:4px"></div>&nbsp;Membership</div>
+  </div>
+  <div class="graph-controls">
+    <button class="gbtn" id="gbtn-reset">&#x21ba; Reset View</button>
+    <span style="font-size:10px;color:var(--ink4);padding:5px 0">
+      Drag nodes &nbsp;·&nbsp; Scroll to zoom &nbsp;·&nbsp; Pan on canvas &nbsp;·&nbsp; Hover for details
+    </span>
+  </div>
+  <div id="graph-wrap">
+    <svg id="graph-svg" xmlns="http://www.w3.org/2000/svg"
+         style="transform-origin:0 0"></svg>
+  </div>
+</div>
+<script>
+(function() {
+  var raw = {"nodes": [{"id": "User:Administrator", "node_type": "user", "label": "Administrator"}, {"id": "Group:Domain Admins", "node_type": "group", "label": "Domain Admins"}, {"id": "User:vkohli", "node_type": "user", "label": "vkohli"}, {"id": "User:jbumrah", "node_type": "user", "label": "jbumrah"}, {"id": "User:mdsiraj", "node_type": "user", "label": "mdsiraj"}, {"id": "User:rsharma", "node_type": "user", "label": "rsharma"}, {"id": "User:krbtgt", "node_type": "user", "label": "krbtgt"}, {"id": "Computer:BLUES-DC$", "node_type": "computer", "label": "BLUES-DC$"}, {"id": "Identity:*", "node_type": "wildcard", "label": "*"}], "edges": [{"source": "User:Administrator", "target": "Group:Domain Admins", "risk": "membership", "label": "member_of"}, {"source": "User:vkohli", "target": "Group:Domain Admins", "risk": "membership", "label": "member_of"}, {"source": "User:jbumrah", "target": "Group:Domain Admins", "risk": "membership", "label": "member_of"}, {"source": "User:mdsiraj", "target": "User:vkohli", "risk": "membership", "label": "member_of"}, {"source": "User:rsharma", "target": "User:mdsiraj", "risk": "membership", "label": "member_of"}, {"source": "Computer:BLUES-DC$", "target": "Identity:*", "risk": "MEDIUM", "label": "delegation"}]};
+  if (!raw || !raw.nodes || raw.nodes.length === 0) return;
+
+  var svg  = document.getElementById('graph-svg');
+  var wrap = document.getElementById('graph-wrap');
+  if (!svg || !wrap) return;
+  var W = wrap.clientWidth  || 1000;
+  var H = wrap.clientHeight || 560;
+
+  var nodeColor = {
+    user:     '#0e0e0e',
+    group:    '#c0392b',
+    computer: '#b45309',
+    spn:      '#334155',
+    other:    '#909090'
+  };
+  var edgeColor = {
+    CRITICAL:   '#c0392b',
+    HIGH:       '#b45309',
+    MEDIUM:     '#334155',
+    LOW:        '#909090',
+    membership: '#d8d8d8',
+    delegation: '#b45309'
+  };
+
+  // ── Init node positions ──────────────────────────────────────
+  var nodes = raw.nodes.map(function(n) {
+    return {
+      id:    n.id,
+      type:  n.node_type || 'other',
+      label: n.label || n.id,
+      x:     W/2 + (Math.random()-0.5)*W*0.65,
+      y:     H/2 + (Math.random()-0.5)*H*0.65,
+      vx: 0, vy: 0
+    };
+  });
+
+  var nodeMap = {};
+  nodes.forEach(function(n) { nodeMap[n.id] = n; });
+
+  var links = raw.edges
+    .filter(function(e) { return nodeMap[e.source] && nodeMap[e.target]; })
+    .map(function(e) {
+      return {s: nodeMap[e.source], t: nodeMap[e.target], risk: e.risk, label: e.label};
+    });
+
+  // ── Build SVG ────────────────────────────────────────────────
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in (attrs||{})) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  var defs = el('defs');
+  var mkr  = el('marker', {id:'arr', markerWidth:'8', markerHeight:'6',
+    refX:'14', refY:'3', orient:'auto'});
+  mkr.appendChild(el('polygon', {points:'0 0,8 3,0 6', fill:'#d8d8d8'}));
+  defs.appendChild(mkr); svg.appendChild(defs);
+
+  var gLinks = el('g'); svg.appendChild(gLinks);
+  var gNodes = el('g'); svg.appendChild(gNodes);
+
+  var tip = document.getElementById('tip');
+  function showTip(e, html) {
+    tip.innerHTML = html; tip.style.display='block';
+    var x = e.clientX+14, y = e.clientY+14;
+    if (x+360>window.innerWidth)  x = e.clientX-360;
+    if (y+160>window.innerHeight) y = e.clientY-160;
+    tip.style.left=x+'px'; tip.style.top=y+'px';
+  }
+  function hideTip() { tip.style.display='none'; }
+  document.addEventListener('mousemove', function(e) {
+    if (tip.style.display!=='none') {
+      var x=e.clientX+14, y=e.clientY+14;
+      if (x+360>window.innerWidth)  x=e.clientX-360;
+      if (y+160>window.innerHeight) y=e.clientY-160;
+      tip.style.left=x+'px'; tip.style.top=y+'px';
+    }
+  });
+
+  var lineEls = links.map(function(lk) {
+    var col = edgeColor[lk.risk] || '#d8d8d8';
+    var line = el('line', {stroke:col, 'stroke-width':'1.5',
+      'marker-end':'url(#arr)', opacity:'0.7'});
+    gLinks.appendChild(line);
+    line.addEventListener('mouseenter', function(e) {
+      showTip(e, '<strong>' + lk.label + '</strong>' + lk.s.label + ' → ' + lk.t.label);
+    });
+    line.addEventListener('mouseleave', hideTip);
+    return line;
+  });
+
+  var nodeEls = nodes.map(function(n) {
+    var g = el('g', {cursor:'pointer'});
+    var col = nodeColor[n.type] || '#909090';
+    var r = n.type==='group' ? 9 : 7;
+    var shape;
+    if (n.type === 'group') {
+      shape = el('rect', {x:-r, y:-r, width:r*2, height:r*2,
+        rx:'2', fill:col, opacity:'0.9'});
+    } else {
+      shape = el('circle', {r:r, fill:col, opacity:'0.9'});
+    }
+    var lbl = el('text', {'text-anchor':'middle', dy:'18',
+      fill:'#909090', 'font-size':'9',
+      'font-family':'DM Mono, monospace', 'pointer-events':'none'});
+    lbl.textContent = n.label.length>18 ? n.label.slice(0,16)+'..' : n.label;
+    g.appendChild(shape); g.appendChild(lbl);
+    gNodes.appendChild(g);
+
+    g.addEventListener('mouseenter', function(e) {
+      shape.setAttribute('opacity','1');
+      showTip(e, '<strong>' + n.id + '</strong>Type: ' + n.type);
+    });
+    g.addEventListener('mouseleave', function() {
+      shape.setAttribute('opacity','0.9'); hideTip();
+    });
+
+    var dragging=false, ox=0, oy=0;
+    g.addEventListener('mousedown', function(e) {
+      dragging=true; ox=e.clientX-n.x; oy=e.clientY-n.y; e.preventDefault();
+    });
+    window.addEventListener('mousemove', function(e) {
+      if (!dragging) return;
+      n.x=e.clientX-ox; n.y=e.clientY-oy; n.vx=0; n.vy=0;
+    });
+    window.addEventListener('mouseup', function() { dragging=false; });
+    return {g:g, shape:shape, n:n};
+  });
+
+  // ── Force simulation ─────────────────────────────────────────
+  function tick() {
+    var repulsion=900, attraction=0.04, damping=0.85;
+    for (var i=0; i<nodes.length; i++) {
+      for (var j=i+1; j<nodes.length; j++) {
+        var a=nodes[i], b=nodes[j];
+        var dx=b.x-a.x, dy=b.y-a.y;
+        var d=Math.max(Math.sqrt(dx*dx+dy*dy),1);
+        var f=repulsion/(d*d);
+        a.vx-=f*dx; a.vy-=f*dy; b.vx+=f*dx; b.vy+=f*dy;
+      }
+    }
+    links.forEach(function(lk) {
+      var dx=lk.t.x-lk.s.x, dy=lk.t.y-lk.s.y;
+      var d=Math.sqrt(dx*dx+dy*dy)||1;
+      var f=(d-90)*attraction;
+      lk.s.vx+=f*dx/d; lk.s.vy+=f*dy/d;
+      lk.t.vx-=f*dx/d; lk.t.vy-=f*dy/d;
+    });
+    nodes.forEach(function(n) {
+      n.vx+=(W/2-n.x)*0.002; n.vy+=(H/2-n.y)*0.002;
+      n.vx*=damping; n.vy*=damping;
+      n.x+=n.vx; n.y+=n.vy;
+      n.x=Math.max(18, Math.min(W-18, n.x));
+      n.y=Math.max(18, Math.min(H-18, n.y));
+    });
+    for (var i=0; i<links.length; i++) {
+      lineEls[i].setAttribute('x1', links[i].s.x);
+      lineEls[i].setAttribute('y1', links[i].s.y);
+      lineEls[i].setAttribute('x2', links[i].t.x);
+      lineEls[i].setAttribute('y2', links[i].t.y);
+    }
+    nodeEls.forEach(function(ne) {
+      ne.g.setAttribute('transform','translate('+ne.n.x+','+ne.n.y+')');
+    });
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  // ── Pan / zoom ───────────────────────────────────────────────
+  var panX=0, panY=0, zoom=1, panning=false, px=0, py=0;
+  wrap.addEventListener('mousedown', function(e) {
+    if (e.target===svg||e.target===wrap) {panning=true; px=e.clientX; py=e.clientY;}
+  });
+  window.addEventListener('mousemove', function(e) {
+    if (!panning) return;
+    panX+=e.clientX-px; panY+=e.clientY-py; px=e.clientX; py=e.clientY;
+    svg.style.transform='translate('+panX+'px,'+panY+'px) scale('+zoom+')';
+  });
+  window.addEventListener('mouseup', function() { panning=false; });
+  wrap.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    zoom=Math.max(.3,Math.min(3, zoom-e.deltaY*0.001));
+    svg.style.transform='translate('+panX+'px,'+panY+'px) scale('+zoom+')';
+  }, {passive:false});
+
+  document.getElementById('gbtn-reset').addEventListener('click', function() {
+    panX=0; panY=0; zoom=1; svg.style.transform='';
+  });
+})();
+</script>
+
+<footer>
+  <span>AD Authorization Refined Report &nbsp;·&nbsp; Siddharth Ray Chaudhuri</span>
+  <span>Generated 2026-04-24 15:34:00</span>
+</footer>
+</div>
+</body>
+</html>
