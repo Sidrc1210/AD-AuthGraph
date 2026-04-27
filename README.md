@@ -64,7 +64,7 @@ What does this repository contain?
 		v)	visualizer.py
 		vi)	main.py 
 
--	Main Output - Output JSON files, screenshots, HTML reports, with explainers; all generated with multiple executions of AD-AuthGraph in my personal Active Directory Lab.
+-	domain_blues_local_test_states - Consists of the Output JSON files, screenshots, HTML reports, with explainers; all generated with multiple executions of AD-AuthGraph in my personal Active Directory Lab.
 
 -	Script Explainers - The Project also served as a personal learning endeavor for scripting with PowerShell and Python. Although, I have used LLMs (free-tier) to develop the code; I have personally studied and tried to explain underlying logic of the scripts. These script explainers I believe can be useful for anyone who wants to learn Python or PowerShell code along with Active Directory and IAM security concepts.
 
