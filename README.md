@@ -72,7 +72,7 @@ What does this repository contain?
  	    state 3: https://sidrc1210.github.io/AD-AuthGraph/domain_blues_local_test_states/State3_WriteDACL/ad_authorization_state_report_refined.html
  	    state 4: https://sidrc1210.github.io/AD-AuthGraph/domain_blues_local_test_states/State4_ResetPassword2/ad_authorization_state_report_refined.html
  	    state 5: https://sidrc1210.github.io/AD-AuthGraph/domain_blues_local_test_states/State5_WriteProperty/ad_authorization_state_report_refined.html
- 	Documents of every state tested are collected in relevantly named folders. These HTML report link of the state will also be in its README.
+ 	Documents of every state tested are collected in relevantly named folders. The HTML report link of every state will also be in its own folder's README.
  	    Note: Folder names are case-sensitive; use links as provided.
 
 -	Script Explainers - The Project also served as a personal learning endeavor for scripting with PowerShell and Python. Although, I have used LLMs (free-tier) to develop the code; I have personally studied and tried to explain underlying logic of the scripts. These script explainers I believe can be useful for anyone who wants to learn Python or PowerShell code along with Active Directory and IAM security concepts.
