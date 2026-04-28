@@ -64,7 +64,16 @@ What does this repository contain?
 		v)	visualizer.py
 		vi)	main.py 
 
--	domain_blues_local_test_states - Consists of the Output JSON files, screenshots, HTML reports, with explainers; all generated with multiple executions of AD-AuthGraph in my personal Active Directory Lab.
+-	domain_blues_local_test_states - Consists of the Output JSON files, screenshots, HTML reports, with READMEs; all generated with multiple executions of AD-AuthGraph in my personal Active Directory Lab. The HTML reports of all the test states can be viewed by navigating to the following links:
+
+        state 0: https://sidrc1210.github.io/AD-AuthGraph/domain_blues_local_test_states/state0_baseline/ad_authorization_state0_report.html
+ 	    state 1: https://sidrc1210.github.io/AD-AuthGraph/domain_blues_local_test_states/state1_privileges_applied/ad_authorization_state_report.html
+ 	    state 2: https://sidrc1210.github.io/AD-AuthGraph/domain_blues_local_test_states/State2_ResetPassword/ad_authorization_state_report_refined.html
+ 	    state 3: https://sidrc1210.github.io/AD-AuthGraph/domain_blues_local_test_states/State3_WriteDACL/ad_authorization_state_report_refined.html
+ 	    state 4: https://sidrc1210.github.io/AD-AuthGraph/domain_blues_local_test_states/State4_ResetPassword2/ad_authorization_state_report_refined.html
+ 	    state 5: https://sidrc1210.github.io/AD-AuthGraph/domain_blues_local_test_states/State5_WriteProperty/ad_authorization_state_report_refined.html
+ 	Documents of every state tested are collected in relevantly named folders. These HTML report link of the state will also be in its README.
+ 	    Note: Folder names are case-sensitive; use links as provided.
 
 -	Script Explainers - The Project also served as a personal learning endeavor for scripting with PowerShell and Python. Although, I have used LLMs (free-tier) to develop the code; I have personally studied and tried to explain underlying logic of the scripts. These script explainers I believe can be useful for anyone who wants to learn Python or PowerShell code along with Active Directory and IAM security concepts.
 
