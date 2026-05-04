@@ -138,8 +138,8 @@ python main.py ad_authorization_state.json --quiet
 # Compare two snapshots (change detection)
 python main.py --compare current_state.json previous_state.json
 # --compare:
-writes to a fixed filename (e.g., comparison_state.json)
-each run → overwrites previous output
+# writes to a fixed filename (e.g., comparison_state.json)
+# each run → overwrites previous output
 
 # Compare with custom output folder
 python main.py --compare current_state.json previous_state.json --output ./deltas
