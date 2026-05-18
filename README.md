@@ -50,7 +50,7 @@ How to use AD-AuthGraph?
   	 
 			   python visualizer.py ad_authorization_state_refined.json
           
-Note: Refer to the PDF Project Report (github path) to see screenshots of the expected terminal responses.
+Note: Refer to the PDF Project Report (https://github.com/Sidrc1210/AD-AuthGraph/blob/main/AD-AuthGraph_state_analysis.pdf) to see screenshots of the expected terminal responses.
 
 AD-AuthGraph has been conceptualized as a learning project to understand IAM (Identity and Access Management). Authentication and Authorization are both critical components of security strategy. This project is an attempt to understand the second more in-depth. How authorization flows and how even a single change in permission impacts the security posture of the entire network.
 
@@ -75,9 +75,7 @@ What does this repository contain?
  	Documents of every state tested are collected in relevantly named folders. The HTML report link of every state will also be in its own folder's README.
  	    Note: Folder names are case-sensitive; use links as provided.
 
--	Script Explainers - The Project also served as a personal learning endeavor for scripting with PowerShell and Python. Although, I have used LLMs (free-tier) to develop the code; I have personally studied and tried to explain underlying logic of the scripts. These script explainers I believe can be useful for anyone who wants to learn Python or PowerShell code along with Active Directory and IAM security concepts.
-
--	Project Report – PDF file which serves as a guide for AD AuthGraph user. Mainly, an organized collection of project notes and screenshots.
+-	AD-AuthGraph_state_analysis.pdf - Project Report – documenting AD-AuthGraph execution in Active Directory domain lab environment, includes authorization states, analysis, screenshots and detailed observations.
 
 -	License - GNU General Public License (GPLv3)  	
 
