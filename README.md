@@ -1,5 +1,7 @@
 # AD-AuthGraph
 
+AD-AuthGraph was developed as an independent Active Directory security project using iterative experimentation in a custom AD lab environment. Development involved LLM-assisted coding support, while project design, authorization-state methodology, lab configuration, testing workflow, validation, analysis, and documentation were independently conducted.
+
 A pipeline of PowerShell and Python scripts which map authorization in an Active Directory environment.
 Active Directory, developed by Microsoft, is the most widely used directory service which manages users, computers, and security permissions within a network, from a central database.
 Within an Active Directory environment, authorization is a critical function after authentication (verifying identity). Authorization determines what kind of access and permissions users have over the resources (files, applications, servers etc.) in a network. This not only impacts hierarchy but also security in an Active Directory domain.
