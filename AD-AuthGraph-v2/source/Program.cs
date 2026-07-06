@@ -428,7 +428,13 @@ public static class Program
             };
 
             _connection.SessionOptions.ProtocolVersion = 3;
-            _connection.SessionOptions.ReferralChasing = ReferralChasingOptions.All;
+            // ReferralChasingOptions.All silently truncates paged subtree searches to a single
+            // page: when a domain-NC subtree search returns same-server referrals (Configuration/
+            // Schema NCs), chasing them wipes the paging cookie in the client LDAP runtime, so
+            // SearchPaged's cookie comes back empty after page 1 even though the server sent a
+            // non-empty cookie. This is a documented DS/LDAP interaction issue, not a bug in the
+            // paging loop itself. Disabling referral chasing lets paging run to completion.
+            _connection.SessionOptions.ReferralChasing = ReferralChasingOptions.None;
             _connection.Bind();
             _log.Info("[+] LDAP bind successful using Negotiate");
         }
