@@ -608,9 +608,21 @@ class AuthorizationRefiner:
                 })
 
         # Sort: closest to Tier-0 first, then shorter chains
+        #
+        # NOTE: f["source"] always HAS the "privilege_proximity" key (it is
+        # set by IdentityRegistry.node_context()); its VALUE is None for
+        # identities with no discovered path to Tier-0. dict.get(key, default)
+        # only substitutes the default when the KEY is absent, so it does
+        # NOT catch a present-but-None value — the None passes straight
+        # through and crashes the comparison against the int proximities of
+        # other findings. We therefore need an explicit None check (0 is a
+        # legitimate, meaningful proximity for Tier-0 identities and must be
+        # preserved, so this cannot be simplified to `or 9999` either).
         findings.sort(
             key=lambda f: (
-                f["source"].get("privilege_proximity", 999),
+                f["source"]["privilege_proximity"]
+                if f["source"]["privilege_proximity"] is not None
+                else 9999,
                 f["escalation_chain"]["length"]
             )
         )
@@ -690,9 +702,15 @@ class AuthorizationRefiner:
                 
             })
 
+        # NOTE: `or 9999` is the same masking bug as the ACL sort above, just
+        # on a different field — shortest_path_length == 0 is a legitimate
+        # (and highest-priority) value for a Kerberoastable account that is
+        # itself a Tier-0/DA member, but `0 or 9999` evaluates to 9999 because
+        # 0 is falsy. That would silently bury the most critical findings at
+        # the bottom of the sort. Use an explicit None check instead.
         entries.sort(key=lambda e: (
             e["privilege_proximity"] if e["privilege_proximity"] is not None else 9999,
-            e["shortest_path_length"] or 9999,
+            e["shortest_path_length"] if e["shortest_path_length"] is not None else 9999,
         ))
         print(f"    [+] Kerberoastable OU map: {len(entries)} entries")
         return entries
